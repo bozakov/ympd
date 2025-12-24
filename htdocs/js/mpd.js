@@ -49,7 +49,7 @@ var app = $.sammy(function () {
     }
 
     function prepare() {
-        $('#nav_links > li').removeClass('active');
+        $('.nav button').removeClass('active');
         $('.page-btn').addClass('hide');
         $('#add-all-songs').hide();
         pagination = 0;
@@ -135,14 +135,18 @@ var app = $.sammy(function () {
 
 $(document).ready(function () {
     webSocketConnect();
-    $('#volumeslider').slider(0);
-    $('#volumeslider').on('slider.newValue', function (evt, data) {
-        socket.send('MPD_API_SET_VOLUME,' + data.val);
+    
+    // Volume slider
+    var volumeSlider = document.getElementById('volumeslider');
+    volumeSlider.addEventListener('input', function() {
+        socket.send('MPD_API_SET_VOLUME,' + this.value);
     });
-    $('#progressbar').slider(0);
-    $('#progressbar').on('slider.newValue', function (evt, data) {
+    
+    // Progress/seek slider
+    var progressBar = document.getElementById('progressbar');
+    progressBar.addEventListener('input', function() {
         if (current_song && current_song.currentSongId >= 0) {
-            var seekVal = Math.ceil(current_song.totalTime * (data.val / 100));
+            var seekVal = Math.ceil(current_song.totalTime * (this.value / 100));
             socket.send(
                 'MPD_API_SET_SEEK,' + current_song.currentSongId + ',' + seekVal
             );
@@ -773,20 +777,23 @@ function webSocketConnect() {
                     var elapsed_seconds =
                         obj.data.elapsedTime - elapsed_minutes * 60;
 
-                    $('#volumeslider').slider(obj.data.volume);
-                    $('#volume-number').text(obj.data.volume + '%');
+                    document.getElementById('volumeslider').value = obj.data.volume;
+                    $('#volume-number').text(obj.data.volume);
                     var progress = Math.floor(
                         (100 * obj.data.elapsedTime) / obj.data.totalTime
                     );
-                    $('#progressbar').slider(progress);
+                    document.getElementById('progressbar').value = progress;
 
                     $('#counter').text(
                         elapsed_minutes +
                             ':' +
                             (elapsed_seconds < 10 ? '0' : '') +
-                            elapsed_seconds +
-                            ' / ' +
-                            total_minutes +
+                            elapsed_seconds
+                    );
+                    
+                    // Update total time in the progress section
+                    $('.progress-section .time:last').text(
+                        total_minutes +
                             ':' +
                             (total_seconds < 10 ? '0' : '') +
                             total_seconds
@@ -803,21 +810,35 @@ function webSocketConnect() {
                         .addClass('active')
                         .css('font-weight', 'bold');
 
-                    if (obj.data.random) $('#btnrandom').addClass('active');
-                    else $('#btnrandom').removeClass('active');
+                    if (obj.data.random) {
+                        $('#btnrandom').addClass('active').text('On');
+                    } else {
+                        $('#btnrandom').removeClass('active').text('Off');
+                    }
 
-                    if (obj.data.consume) $('#btnconsume').addClass('active');
-                    else $('#btnconsume').removeClass('active');
+                    if (obj.data.consume) {
+                        $('#btnconsume').addClass('active').text('On');
+                    } else {
+                        $('#btnconsume').removeClass('active').text('Off');
+                    }
 
-                    if (obj.data.single) $('#btnsingle').addClass('active');
-                    else $('#btnsingle').removeClass('active');
+                    if (obj.data.single) {
+                        $('#btnsingle').addClass('active').text('On');
+                    } else {
+                        $('#btnsingle').removeClass('active').text('Off');
+                    }
 
-                    if (obj.data.crossfade)
-                        $('#btncrossfade').addClass('active');
-                    else $('#btncrossfade').removeClass('active');
+                    if (obj.data.crossfade) {
+                        $('#btncrossfade').addClass('active').text(obj.data.crossfade + 's');
+                    } else {
+                        $('#btncrossfade').removeClass('active').text('Off');
+                    }
 
-                    if (obj.data.repeat) $('#btnrepeat').addClass('active');
-                    else $('#btnrepeat').removeClass('active');
+                    if (obj.data.repeat) {
+                        $('#btnrepeat').addClass('active').text('On');
+                    } else {
+                        $('#btnrepeat').removeClass('active').text('Off');
+                    }
 
                     last_state = obj;
                     break;
@@ -826,9 +847,9 @@ function webSocketConnect() {
                     if (Object.keys(obj.data).length) {
                         $.each(obj.data, function (id, name) {
                             var btn = $(
-                                '<button id="btnoutput' +
+                                '<button class="ghost" id="btnoutput' +
                                     id +
-                                    '" class="btn btn-default" onclick="toggleoutput(this, ' +
+                                    '" onclick="toggleoutput(this, ' +
                                     id +
                                     ')"><span class="glyphicon glyphicon-volume-up"></span> ' +
                                     name +
@@ -1446,3 +1467,36 @@ function add_filter() {
     $('#f' + filter).addClass('active');
     $('#filter').removeClass('hide');
 }
+
+// Modern UI navigation handler
+$(document).ready(function() {
+    // Handle navigation button clicks
+    $('.nav button[data-href]').on('click', function() {
+        var href = $(this).data('href');
+        if (href) {
+            window.location.hash = href;
+        }
+    });
+
+    // Update toggle button states
+    function updateToggleButton(btn, isActive, text) {
+        if (isActive) {
+            btn.addClass('active').text(text || 'On');
+        } else {
+            btn.removeClass('active').text(text || 'Off');
+        }
+    }
+
+    // Override the original button click handlers to update UI properly
+    $('#btnrandom, #btnrepeat, #btncrossfade, #btnconsume, #btnsingle').on('click', function() {
+        $(this).toggleClass('active');
+        var isActive = $(this).hasClass('active');
+        $(this).text(isActive ? 'On' : 'Off');
+    });
+
+    // Handle trash mode buttons
+    $('#trashmode button').on('click', function() {
+        $('#trashmode button').removeClass('active');
+        $(this).addClass('active');
+    });
+});

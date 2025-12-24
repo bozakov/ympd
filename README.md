@@ -14,6 +14,18 @@ http://www.ympd.org
 -   cmake 2.6: http://cmake.org/
 -   OpenSSL: https://www.openssl.org/
 
+apt-get install -y --no-install-recommends \
+		ca-certificates \
+		sudo \
+		git \
+		build-essential \
+		cmake \
+		ninja-build \
+		pkg-config \
+		libmpdclient-dev \
+		libssl-dev \
+		clang-format
+
 ## Unix Build Instructions
 
 1. install dependencies. cmake, libmpdclient (dev), and OpenSSL (dev) are available from all major distributions.

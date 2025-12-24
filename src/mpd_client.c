@@ -309,7 +309,7 @@ int callback_mpd(struct mg_connection *c) {
             if ((token = strtok(NULL, ",")) == NULL)
                 goto out_host_change;
 
-            strncpy(mpd.host, token, sizeof(mpd.host));
+            snprintf(mpd.host, sizeof(mpd.host), "%s", token);
             mpd.port = int_buf;
             mpd.conn_state = MPD_RECONNECT;
             free(p_charbuf);

@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
                 mpd.gpass = strdup(optarg);
                 break;
             case 'h':
-                strncpy(mpd.host, optarg, sizeof(mpd.host));
+                snprintf(mpd.host, sizeof(mpd.host), "%s", optarg);
                 break;
             case 'p':
                 mpd.port = atoi(optarg);

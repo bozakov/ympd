@@ -21,7 +21,7 @@
   
   /* UI Opacity Values */
   --glass-opacity: 0.04;
-  --glass-hover-opacity: 0.08;
+  --glass-hover-opacity: 0.06;
   --border-opacity: 0.12;
   --shadow-color: 0, 0, 0;
   --shadow-opacity: 0.1;
@@ -57,6 +57,11 @@
   /* Design System */
   --radius: 12px;
   color-scheme: light;
+
+  /* Bootstrap 5 font vars (keep all components consistent) */
+  --bs-font-sans-serif: Inter, ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --bs-body-font-family: var(--bs-font-sans-serif);
 }
 
 * {
@@ -73,19 +78,25 @@ body {
   background: linear-gradient(180deg, var(--bg-gradient-start), var(--bg-gradient-end));
 }
 
+body {
+  font-family: var(--bs-body-font-family);
+}
+
 /* App Grid Layout */
 .app {
   max-width: 1400px;
   margin: 28px auto;
   padding: 20px;
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 1fr 260px;
+  grid-template-areas: "main sidebar";
   gap: 20px;
   align-items: start;
 }
 
 /* Sidebar */
 .sidebar {
+  grid-area: sidebar;
   background: var(--surface);
   border-radius: var(--radius);
   padding: 20px;
@@ -230,6 +241,7 @@ body {
 
 /* Main area */
 .main {
+  grid-area: main;
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 20px;
@@ -441,20 +453,38 @@ body {
   background: transparent !important;
 }
 
+.table th:first-child {
+  width: 50px;
+  padding-left: 16px;
+}
+
+.table th:nth-child(5) {
+  width: 80px;
+  text-align: right;
+}
+
+.table th:last-child {
+  width: 40px;
+}
+
 .table tbody {
   border: none !important;
 }
 
 .table tbody tr {
   border: none !important;
-  transition: none !important;
+  transition: background 0.15s ease !important;
   cursor: pointer;
   background: transparent !important;
-  position: relative;
   padding-left: 0 !important;
 }
 
-.table tbody tr::before {
+/* Left accent bar: attach to first cell (more reliable than styling `tr`) */
+.table tbody tr > td:first-child {
+  position: relative;
+}
+
+.table tbody tr > td:first-child::before {
   content: '';
   position: absolute;
   left: 0;
@@ -462,48 +492,47 @@ body {
   bottom: 0;
   width: 3px;
   background: transparent;
+  transition: background 0.15s ease;
 }
 
 .table tbody tr:hover {
-  background: var(--glass) !important;
+  background: rgba(125, 175, 156, 0.25) !important;
 }
 
 .table tbody tr.active {
-  background: rgba(125, 175, 156, 0.12) !important;
+  background: rgba(125, 175, 156, 0.3) !important;
 }
 
 .table tbody tr.active:hover {
-  background: rgba(125, 175, 156, 0.12) !important;
+  background: rgba(125, 175, 156, 0.35) !important;
 }
 
 .table tbody tr.active td {
   color: var(--text-primary) !important;
-  background: transparent !important;
 }
 
-.table tbody tr.active::before {
+.table tbody tr.active > td:first-child::before {
   background: var(--accent-bright);
 }
 
 /* Override Bootstrap's default active styles */
 .table > tbody > tr.active > td {
-  background-color: transparent !important;
   color: var(--text-primary) !important;
 }
 
 .table-hover > tbody > tr.active:hover > td {
-  background-color: transparent !important;
   color: var(--text-primary) !important;
 }
 
 .table td {
-  padding: 14px 12px;
+  padding: 12px 12px;
   color: var(--text-primary);
   font-size: 13px;
   font-weight: 400;
   border: none !important;
   border-top: none !important;
   border-bottom: none !important;
+  background-color: transparent !important;
 }
 
 .table td:first-child {
@@ -514,7 +543,11 @@ body {
   padding-left: 16px;
 }
 
-.table td:nth-child(2),
+.table td:nth-child(2) {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
 .table td:nth-child(3) {
   color: var(--text-secondary);
   font-size: 12px;
@@ -525,13 +558,36 @@ body {
   min-width: 200px;
 }
 
-.table td:last-child {
+.table td:nth-child(5) {
   text-align: right;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   font-size: 12px;
-  padding-right: 16px;
   width: 80px;
+}
+
+.table td:last-child {
+  width: 40px;
+  text-align: right;
+  padding-right: 16px;
+}
+
+/* Fix Bootstrap Icons colors */
+.bi {
+  color: inherit !important;
+}
+
+/* Table row action icons */
+.table a,
+.table a:hover,
+.table a:focus {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.table tr:hover a {
+  color: var(--text-secondary);
 }
 
 /* Search */
@@ -567,7 +623,7 @@ body {
 
 /* Breadcrumb */
 .breadcrumb {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--glass);
   border-radius: 10px;
   padding: 10px 14px;
   margin: 0 0 16px 0;
@@ -630,6 +686,52 @@ body {
   color: var(--muted);
   font-size: 13px;
   font-weight: 600;
+}
+
+/* Trashmode controls (rarely used): tiny + subtle */
+.trashmode-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.trashmode-row .trash-mode-label {
+  margin: 0;
+}
+
+.trashmode-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.trashmode-btn {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  justify-content: center;
+  gap: 0;
+}
+
+.trashmode-btn:hover {
+  background: var(--glass);
+  color: var(--text-secondary);
+}
+
+.trashmode-btn.active {
+  background: var(--glass-hover);
+  color: var(--text-primary);
+}
+
+.trashmode-btn:focus-visible {
+  outline: 2px solid rgba(var(--shadow-color), 0.18);
+  outline-offset: 2px;
 }
 
 /* Volume Section in Sidebar */
@@ -772,10 +874,10 @@ input[type="range"]::-moz-range-track {
 
 .pager li a {
   padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--glass);
+  border: 1px solid var(--border-subtle);
   border-radius: 10px;
-  color: var(--muted);
+  color: var(--text-primary);
   text-decoration: none;
   font-weight: 600;
   font-size: 14px;
@@ -783,8 +885,11 @@ input[type="range"]::-moz-range-track {
 }
 
 .pager li a:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #e6eef6;
+  background: var(--surface);
+  color: var(--text-primary);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(var(--shadow-color), 0.15);
 }
 
 /* Notifications */
@@ -805,6 +910,9 @@ input[type="range"]::-moz-range-track {
 @media (max-width: 1024px) {
   .app {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "main"
+      "sidebar";
     padding: 12px;
   }
 
@@ -857,104 +965,102 @@ input[type="range"]::-moz-range-track {
   }
 }
 
-/* Bootstrap slider overrides */
-.slider {
-  width: 100%;
-}
+/* Legacy slider classes - no longer used with native range inputs */
 
-.slider-horizontal {
-  width: 100%;
-  height: 4px;
-}
-
-.slider-track {
-  background: var(--glass) !important;
-  border: 1px solid var(--border-subtle) !important;
-  border-radius: 999px !important;
-  height: 4px !important;
-}
-
-.slider-selection,
-#volumeslider .slider-selection,
-#progressbar .slider-selection {
-  background: var(--accent) !important;
-  background-color: var(--accent) !important;
-  border-radius: 999px !important;
-}
-
-.slider-handle,
-#volumeslider .slider-handle,
-#progressbar .slider-handle {
-  background: var(--accent) !important;
-  background-color: var(--accent) !important;
-  border: 2px solid white !important;
-  width: 16px !important;
-  height: 16px !important;
-  border-radius: 50% !important;
-  box-shadow: 0 2px 6px rgba(var(--shadow-color), 0.2) !important;
-  top: -6px !important;
-  cursor: pointer !important;
-}
-
-/* Modal overrides */
+/* Modal overrides for Bootstrap 5 */
 .modal-content {
-  background: linear-gradient(180deg, var(--surface), var(--bg));
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius);
-  color: #e6eef6;
+  background: var(--base-bg) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 20px 60px rgba(var(--shadow-color), 0.3) !important;
 }
 
 .modal-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  padding: 20px 24px !important;
+  background: var(--surface) !important;
 }
 
 .modal-title {
-  color: #e6eef6;
+  color: var(--text-primary) !important;
+  font-weight: 700 !important;
 }
 
 .modal-body {
-  padding: 24px;
+  padding: 24px !important;
+  color: var(--text-primary) !important;
+}
+
+.modal-body h4,
+.modal-body h5,
+.modal-body h6,
+.modal-body p,
+.modal-body small {
+  color: var(--text-primary) !important;
+}
+
+.modal-body a {
+  color: var(--accent-bright) !important;
 }
 
 .modal-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 16px 24px;
+  border-top: 1px solid var(--border-subtle) !important;
+  padding: 16px 24px !important;
+  background: var(--surface) !important;
 }
 
 .modal-backdrop {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(var(--shadow-color), 0.5) !important;
 }
 
 .form-control {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  color: #e6eef6;
-  padding: 10px 14px;
+  background: white !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 8px !important;
+  color: var(--text-primary) !important;
+  padding: 10px 14px !important;
 }
 
 .form-control:focus {
-  background: var(--glass-hover);
-  border-color: var(--accent-bright);
-  color: var(--text-primary);
-  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15);
+  background: white !important;
+  border-color: var(--accent) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 0 0 3px rgba(var(--shadow-color), 0.1) !important;
+  outline: none !important;
 }
 
-.btn-default {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--muted);
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-weight: 600;
-  transition: all 0.2s ease;
+.form-label {
+  color: var(--muted) !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  margin-bottom: 6px !important;
 }
 
-.btn-default:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #e6eef6;
-  border-color: rgba(255, 255, 255, 0.12);
+.btn-secondary {
+  background: var(--glass) !important;
+  border: 1px solid var(--border-subtle) !important;
+  color: var(--text-primary) !important;
+  border-radius: 8px !important;
+  padding: 10px 16px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-secondary:hover {
+  background: var(--surface) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--accent) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(var(--shadow-color), 0.15) !important;
+}
+
+.btn-secondary:active,
+.btn-secondary:focus {
+  background: var(--surface) !important;
+  border-color: var(--accent) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 0 0 3px rgba(var(--shadow-color), 0.1) !important;
 }
 
 /* Legacy compatibility */
@@ -977,49 +1083,39 @@ input[type="range"]::-moz-range-track {
   justify-content: flex-start;
 }
 
-
-td:nth-last-child(2),
-th:nth-last-child(2) {
-  text-align: right;
-  width: 4em;
+/* Bootstrap 5 utility classes */
+.pull-right {
+  float: right !important;
 }
 
-#salamisandwich td:nth-child(4) span {
-  font-size: 90%;
-
-  display: block;
+.pull-left {
+  float: left !important;
 }
 
-td:nth-child(2),
-td:nth-child(3) {
-  min-width: 25%;
-  max-width: 10em;
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
 
+/* Legacy table layout rules (scoped to the queue table only).
+   Important: keep these selectors scoped so they don't override global `.table` column widths. */
+#salamisandwich tbody {
+  cursor: pointer;
+}
+
+#salamisandwich td:nth-child(2),
+#salamisandwich td:nth-child(3) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 @media only screen and (max-width: 600px) {
-  td:nth-child(2),
-  td:nth-child(3) {
-    min-width: 0;
-    max-width: 0;
-  }
-  td:nth-child(4),
-  th:nth-child(4) {
-    min-width: 10%;
+  #salamisandwich td:nth-child(4),
+  #salamisandwich th:nth-child(4) {
     white-space: normal;
   }
-}
-
-tbody {
-  cursor: pointer;
-}
-
-td:last-child,
-td:first-child {
-  width: 30px;
 }
 
 .notifications {
@@ -1044,18 +1140,48 @@ button {
   overflow: hidden;
 }
 
-#trashmode span:last-child {
-  display: inline-block;
-  text-align: left;
-  width: 2.8em;
+/* Browse A–Z filter links (keep subtle; avoid default link blue) */
+#filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin: 0 0 8px;
+}
+
+#filter a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 6px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 1;
+}
+
+#filter a:hover {
+  background: var(--glass);
+  color: var(--text-secondary);
 }
 
 #filter > a.active {
-  font-weight: bold;
+  font-weight: 700;
   pointer-events: none;
   cursor: default;
-  text-decoration: none;
-  color: black;
+  background: var(--glass-hover);
+  color: var(--text-primary);
+}
+
+/* Large screens: keep A–Z on a single line */
+@media (min-width: 992px) {
+  #filter {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
 }
 
 @media screen and (min-width: 992px) {

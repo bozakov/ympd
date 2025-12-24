@@ -18,9 +18,19 @@
       rel="stylesheet"
     />
 
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet" />
-    <link href="css/bootstrap-theme.css" rel="stylesheet" />
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
 
     <!-- Custom styles for this template -->
     <link href="css/mpd.css" rel="stylesheet" />
@@ -37,7 +47,7 @@
       <aside class="sidebar">
         <div class="brand">
           <div class="logo">
-            <span class="glyphicon glyphicon-play-circle"></span>
+            <i class="bi bi-play-circle-fill"></i>
           </div>
           <div>
             <h1>YMPD</h1>
@@ -45,61 +55,9 @@
           </div>
         </div>
 
-        <nav class="nav" aria-label="Main">
-          <button id="queue" class="active" data-href="#/">
-            <span class="glyphicon glyphicon-list"></span> Queue
-          </button>
-          <button id="browse" data-href="#/browse/0/">
-            <span class="glyphicon glyphicon-folder-open"></span> Browse
-          </button>
-          <button data-toggle="modal" data-target="#addstream">
-            <span class="glyphicon glyphicon-plus"></span> Add Stream
-          </button>
-          <button data-toggle="modal" data-target="#settings" onclick="getHost();">
-            <span class="glyphicon glyphicon-wrench"></span> Settings
-          </button>
-        </nav>
-
-        <div class="sep"></div>
-
-        <div class="controls-list">
-          <div class="switch">
-            <div class="label">
-              <span class="glyphicon glyphicon-random"></span> Random
-            </div>
-            <button id="btnrandom" type="button" class="toggle-btn">Off</button>
-          </div>
-          <div class="switch">
-            <div class="label">
-              <span class="glyphicon glyphicon-repeat"></span> Repeat
-            </div>
-            <button id="btnrepeat" type="button" class="toggle-btn">Off</button>
-          </div>
-          <div class="switch">
-            <div class="label">
-              <span class="glyphicon glyphicon-link"></span> Crossfade
-            </div>
-            <button id="btncrossfade" type="button" class="toggle-btn">Off</button>
-          </div>
-          <div class="switch">
-            <div class="label">
-              <span class="glyphicon glyphicon-fire"></span> Consume
-            </div>
-            <button id="btnconsume" type="button" class="toggle-btn">Off</button>
-          </div>
-          <div class="switch">
-            <div class="label">
-              <span class="glyphicon glyphicon-star"></span> Single
-            </div>
-            <button id="btnsingle" type="button" class="toggle-btn">Off</button>
-          </div>
-        </div>
-
-        <div class="sep"></div>
-
         <div class="volume-section">
           <div class="volume-label">
-            <span id="volume-icon" class="glyphicon glyphicon-volume-up"></span>
+            <i id="volume-icon" class="bi bi-volume-up-fill"></i>
             <span>Volume</span>
           </div>
           <div class="volume-slider-container">
@@ -110,19 +68,94 @@
 
         <div class="sep"></div>
 
+        <nav class="nav" aria-label="Main">
+          <button id="queue" class="active" data-href="#/">
+            <i class="bi bi-music-note-list"></i> Queue
+          </button>
+          <button id="browse" data-href="#/browse/0/">
+            <i class="bi bi-folder-open"></i> Browse
+          </button>
+          <button data-bs-toggle="modal" data-bs-target="#addstream">
+            <i class="bi bi-plus-lg"></i> Add Stream
+          </button>
+          <button data-bs-toggle="modal" data-bs-target="#settings" onclick="getHost();">
+            <i class="bi bi-gear-fill"></i> Settings
+          </button>
+        </nav>
+
+        <div class="sep"></div>
+
+        <div class="controls-list">
+          <div class="switch">
+            <div class="label">
+              <i class="bi bi-shuffle"></i> Random
+            </div>
+            <button id="btnrandom" type="button" class="toggle-btn">Off</button>
+          </div>
+          <div class="switch">
+            <div class="label">
+              <i class="bi bi-repeat"></i> Repeat
+            </div>
+            <button id="btnrepeat" type="button" class="toggle-btn">Off</button>
+          </div>
+          <div class="switch">
+            <div class="label">
+              <i class="bi bi-reception-4"></i> Crossfade
+            </div>
+            <button id="btncrossfade" type="button" class="toggle-btn">Off</button>
+          </div>
+          <div class="switch">
+            <div class="label">
+              <i class="bi bi-fire"></i> Consume
+            </div>
+            <button id="btnconsume" type="button" class="toggle-btn">Off</button>
+          </div>
+          <div class="switch">
+            <div class="label">
+              <i class="bi bi-star-fill"></i> Single
+            </div>
+            <button id="btnsingle" type="button" class="toggle-btn">Off</button>
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
         <div id="btn-outputs-block"></div>
 
-        <div class="trash-mode-label">Trash Mode</div>
-        <div class="footer-actions" id="trashmode">
-          <button id="btntrashmodeup" type="button" class="ghost">
-            <span class="glyphicon glyphicon-chevron-up"></span> Up
+        <div class="trashmode-row">
+          <div class="trash-mode-label">Trash Mode</div>
+          <div class="trashmode-buttons" id="trashmode">
+          <button
+            id="btntrashmodeup"
+            type="button"
+            class="ghost trashmode-btn"
+            title="Trash mode: Up"
+            aria-label="Trash mode up"
+          >
+            <i class="bi bi-chevron-compact-up"></i>
+            <span class="visually-hidden">Up</span>
           </button>
-          <button id="btntrashmodesingle" type="button" class="ghost active">
-            <span class="glyphicon glyphicon-star-empty"></span> Single
+          <button
+            id="btntrashmodesingle"
+            type="button"
+            class="ghost trashmode-btn active"
+            title="Trash mode: Single"
+            aria-label="Trash mode single"
+          >
+            <i class="bi bi-trash"></i>
+            <span class="visually-hidden">Single</span>
           </button>
-          <button id="btntrashmodedown" type="button" class="ghost">
-            <span class="glyphicon glyphicon-chevron-down"></span> Down
+          <button
+            id="btntrashmodedown"
+            type="button"
+            class="ghost trashmode-btn"
+            title="Trash mode: Down"
+            aria-label="Trash mode down"
+          >
+            <i class="bi bi-chevron-compact-down"></i>
+            <span class="visually-hidden">Down</span>
           </button>
+          </div>
         </div>
       </aside>
 
@@ -133,7 +166,7 @@
         <!-- Now Playing -->
         <section class="now-playing" aria-label="Now playing">
           <div class="art" aria-hidden="true">
-            <span class="glyphicon glyphicon-music"></span>
+            <i class="bi bi-music-note-beamed"></i>
           </div>
           <div class="meta">
             <h2>
@@ -147,22 +180,22 @@
             <div class="player">
               <div class="controls">
                 <button type="button" class="big-btn" onclick="socket.send('MPD_API_SET_PREV');" title="Previous" aria-label="Previous">
-                  <span class="glyphicon glyphicon-backward"></span>
+                  <i class="bi bi-skip-backward-fill"></i>
                 </button>
                 <button type="button" class="play" onclick="clickPlay();" id="playBtn" aria-label="Play/Pause">
-                  <span id="play-icon" class="glyphicon glyphicon-pause"></span>
+                  <i id="play-icon" class="bi bi-pause-fill"></i>
                 </button>
                 <button type="button" class="big-btn" onclick="socket.send('MPD_API_SET_NEXT');" title="Next" aria-label="Next">
-                  <span class="glyphicon glyphicon-forward"></span>
+                  <i class="bi bi-skip-forward-fill"></i>
                 </button>
                 <button type="button" class="big-btn" onclick="socket.send('MPD_API_SET_STOP');" title="Stop" aria-label="Stop">
-                  <span id="stop-icon" class="glyphicon glyphicon-stop"></span>
+                  <i id="stop-icon" class="bi bi-stop-fill"></i>
                 </button>
 
                 <div style="flex:1"></div>
 
                 <button id="btnlove" type="button" class="big-btn" onclick="clickLove();" title="Love" aria-label="Love">
-                  <span class="glyphicon glyphicon-heart"></span>
+                  <i class="bi bi-heart-fill"></i>
                 </button>
               </div>
 
@@ -206,7 +239,7 @@
                   <th>Album</th>
                   <th>Title</th>
                   <th>Length</th>
-                  <th><div style="width: 15px"></div></th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody></tbody>
@@ -220,10 +253,10 @@
 
           <div class="footer-actions">
             <button class="ghost" onclick="socket.send('MPD_API_RM_ALL');">
-              <span class="glyphicon glyphicon-trash"></span> Clear Queue
+              <i class="bi bi-trash-fill"></i> Clear Queue
             </button>
-            <button class="ghost" data-toggle="modal" data-target="#savequeue">
-              <span class="glyphicon glyphicon-save"></span> Save Queue
+            <button class="ghost" data-bs-toggle="modal" data-bs-target="#savequeue">
+              <i class="bi bi-save-fill"></i> Save Queue
             </button>
           </div>
         </section>
@@ -245,19 +278,19 @@
             <button
               type="button"
               class="close"
-              data-dismiss="modal"
+              data-bs-dismiss="modal"
               aria-hidden="true"
             >
               &times;
             </button>
             <h2 class="modal-title" id="settingsLabel">
-              <span class="glyphicon glyphicon-wrench"></span> Settings
+              <i class="bi bi-gear-fill"></i> Settings
             </h2>
           </div>
           <div class="modal-body">
             <h4>
               <a href="http://www.ympd.org"
-                ><span class="glyphicon glyphicon-play-circle"></span> ympd</a
+                ><i class="bi bi-play-circle-fill"></i> ympd</a
               >&nbsp;&nbsp;&nbsp;<small
                 >MPD Web GUI - written in C, utilizing Websockets and
                 Bootstrap/JS</small
@@ -282,23 +315,23 @@
             </h6>
             <hr />
             <div class="row">
-              <div class="form-group col-md-6">
+              <div class="mb-3 col-md-6">
                 <button
                   type="button"
-                  class="btn btn-default btn-block"
+                  class="btn btn-secondary btn-block"
                   onclick="updateDB();"
                 >
-                  <span class="glyphicon glyphicon-refresh"></span> Update
+                  <i class="bi bi-arrow-clockwise"></i> Update
                   Database
                 </button>
               </div>
-              <div class="form-group col-md-6" data-toggle="buttons">
+              <div class="mb-3 col-md-6" data-bs-toggle="buttons">
                 <button
                   type="button"
-                  class="btn btn-default btn-block"
+                  class="btn btn-secondary btn-block"
                   id="btnnotify"
                 >
-                  <span class="glyphicon glyphicon-comment"></span> Enable
+                  <i class="bi bi-bell-fill"></i> Enable
                   Notifications
                 </button>
               </div>
@@ -306,18 +339,18 @@
             <hr />
             <form role="form">
               <div class="row">
-                <div class="form-group col-md-9">
-                  <label class="control-label" for="mpdhost">MPD Host/IP</label>
+                <div class="mb-3 col-md-9">
+                  <label class="form-label" for="mpdhost">MPD Host/IP</label>
                   <input type="text" class="form-control" id="mpdhost" />
                 </div>
-                <div class="form-group col-md-3">
-                  <label class="control-label" for="mpdport">MPD Port</label>
+                <div class="mb-3 col-md-3">
+                  <label class="form-label" for="mpdport">MPD Port</label>
                   <input type="text" class="form-control" id="mpdport" />
                 </div>
               </div>
               <div class="row">
-                <div class="form-group col-md-6">
-                  <label class="control-label" for="mpd_pw">MPD Password</label>
+                <div class="mb-3 col-md-6">
+                  <label class="form-label" for="mpd_pw">MPD Password</label>
                   <input
                     type="password"
                     class="form-control"
@@ -325,8 +358,8 @@
                     placeholder="Password"
                   />
                 </div>
-                <div class="form-group col-md-6">
-                  <label class="control-label" for="mpd_pw_con"
+                <div class="mb-3 col-md-6">
+                  <label class="form-label" for="mpd_pw_con"
                     >MPD Password (Confirmation)</label
                   >
                   <input
@@ -335,12 +368,12 @@
                     id="mpd_pw_con"
                     placeholder="Confirmation"
                     data-placement="right"
-                    data-toggle="popover"
+                    data-bs-toggle="popover"
                     data-content="Password does not match!"
                     data-trigger="manual"
                   />
                 </div>
-                <div class="form-group col-md-12">
+                <div class="mb-3 col-md-12">
                   <div id="mpd_password_set" class="hide alert alert-info">
                     <button type="button" class="close" aria-hidden="true">
                       &times;
@@ -350,8 +383,8 @@
                 </div>
               </div>
               <div class="row">
-                <div class="form-group col-md-12">
-                  <label class="control-label" for="mpdstream"
+                <div class="mb-3 col-md-12">
+                  <label class="form-label" for="mpdstream"
                     >MPD Stream URL</label
                   >
                   <input type="text" class="form-control" id="mpdstream" />
@@ -359,25 +392,25 @@
               </div>
             </form>
             <div class="row">
-              <div class="form-group col-md-12" data-toggle="buttons">
+              <div class="mb-3 col-md-12" data-bs-toggle="buttons">
                 <button
                   type="button"
-                  class="btn btn-default btn-block"
+                  class="btn btn-secondary btn-block"
                   id="btnautoplay"
                 >
-                  <span class="glyphicon glyphicon-play"></span> Autoplay stream
+                  <i class="bi bi-play-fill"></i> Autoplay stream
                   in this browser when mpd is playing
                 </button>
               </div>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
               Cancel
             </button>
             <button
               type="button"
-              class="btn btn-default"
+              class="btn btn-secondary"
               onclick="confirmSettings();"
             >
               Save
@@ -405,20 +438,20 @@
             <button
               type="button"
               class="close"
-              data-dismiss="modal"
+              data-bs-dismiss="modal"
               aria-hidden="true"
             >
               &times;
             </button>
             <h2 class="modal-title" id="addstreamLabel">
-              <span class="glyphicon glyphicon-wrench"></span> Add Stream
+              <i class="bi bi-plus-circle-fill"></i> Add Stream
             </h2>
           </div>
           <div class="modal-body">
             <form role="form">
               <div class="row">
-                <div class="form-group col-md-12">
-                  <label class="control-label" for="streamurl"
+                <div class="mb-3 col-md-12">
+                  <label class="form-label" for="streamurl"
                     >Stream URL</label
                   >
                   <input type="text" class="form-control" id="streamurl" />
@@ -427,12 +460,12 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
               Cancel
             </button>
             <button
               type="button"
-              class="btn btn-default"
+              class="btn btn-secondary"
               onclick="addStream();"
             >
               Add Stream
@@ -459,20 +492,20 @@
             <button
               type="button"
               class="close"
-              data-dismiss="modal"
+              data-bs-dismiss="modal"
               aria-hidden="true"
             >
               &times;
             </button>
             <h2 class="modal-title" id="savequeueLabel">
-              <span class="glyphicon glyphicon-wrench"></span> Save Queue
+              <i class="bi bi-save-fill"></i> Save Queue
             </h2>
           </div>
           <div class="modal-body">
             <form role="form">
               <div class="row">
-                <div class="form-group col-md-9">
-                  <label class="control-label" for="playlistname"
+                <div class="mb-3 col-md-9">
+                  <label class="form-label" for="playlistname"
                     >Playlist Name</label
                   >
                   <input type="text" class="form-control" id="playlistname" />
@@ -481,12 +514,12 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
               Cancel
             </button>
             <button
               type="button"
-              class="btn btn-default"
+              class="btn btn-secondary"
               onclick="saveQueue();"
             >
               Save Queue
@@ -536,7 +569,11 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/jquery.cookie.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
     <script src="js/bootstrap-notify.js"></script>
     <script src="js/sammy.js"></script>
     <script src="js/jquery-ui-sortable.min.js"></script>

@@ -186,8 +186,8 @@ $(document).ready(function () {
         this.src = '';
         this.removeAttribute('src');
         $('#localplay-icon')
-            .removeClass('glyphicon-pause')
-            .addClass('glyphicon-play');
+            .removeClass('bi-pause-fill')
+            .addClass('bi-play-fill');
     });
 
     document.getElementById('player').addEventListener(
@@ -372,7 +372,7 @@ function webSocketConnect() {
                         ).append(
                             '<a class="pull-right btn-group-hover" href="#/" ' +
                                 'onclick="trash($(this).parents(\'tr\'));">' +
-                                '<span class="glyphicon glyphicon-trash"></span></a>'
+                                '<span class="bi bi-trash-fill"></span></a>'
                         );
                     } else {
                         $('#salamisandwich > tbody > tr').on({
@@ -401,7 +401,7 @@ function webSocketConnect() {
                                             .append(
                                                 '<a class="pull-right btn-group-hover" href="#/" ' +
                                                     'onclick="trash($(this).parents(\'tr\'));">' +
-                                                    '<span class="glyphicon glyphicon-trash"></span></a>'
+                                                    '<span class="bi bi-trash-fill"></span></a>'
                                             )
                                             .find('a')
                                             .fadeTo('fast', 1);
@@ -504,7 +504,7 @@ function webSocketConnect() {
                                         '" class="' +
                                         clazz +
                                         '">' +
-                                        '<td><span class="glyphicon glyphicon-folder-open"></span></td>' +
+                                        '<td><span class="bi bi-folder-open"></span></td>' +
                                         '<td colspan="3"><a>' +
                                         basename(obj.data[item].dir) +
                                         '</a></td>' +
@@ -524,7 +524,7 @@ function webSocketConnect() {
                                         '" class="' +
                                         clazz +
                                         '">' +
-                                        '<td><span class="glyphicon glyphicon-list"></span></td>' +
+                                        '<td><span class="bi bi-music-note-list"></span></td>' +
                                         '<td colspan="3"><a>' +
                                         basename(obj.data[item].plist) +
                                         '</a></td>' +
@@ -553,7 +553,7 @@ function webSocketConnect() {
                                     '<tr uri="' +
                                         encodeURIComponent(obj.data[item].uri) +
                                         '" class="song">' +
-                                        '<td><span class="glyphicon glyphicon-music"></span></td>' +
+                                        '<td><span class="bi bi-music-note-beamed"></span></td>' +
                                         '<td>' +
                                         obj.data[item].artist +
                                         '</td>' +
@@ -576,7 +576,7 @@ function webSocketConnect() {
                                     $('#next').removeClass('hide');
                                 } else {
                                     $('#salamisandwich > tbody').append(
-                                        '<tr><td><span class="glyphicon glyphicon-remove"></span></td>' +
+                                        '<tr><td><span class="bi bi-x-circle-fill"></span></td>' +
                                             '<td colspan="3">Too many results, please refine your search!</td>' +
                                             '<td></td><td></td></tr>'
                                     );
@@ -590,14 +590,14 @@ function webSocketConnect() {
                     function appendClickableIcon(
                         appendTo,
                         onClickAction,
-                        glyphicon
+                        iconClass
                     ) {
                         $(appendTo)
                             .append(
                                 '<a role="button" class="pull-right btn-group-hover">' +
-                                    '<span class="glyphicon glyphicon-' +
-                                    glyphicon +
-                                    '"></span></a>'
+                                    '<i class="bi ' +
+                                    iconClass +
+                                    '"></i></a>'
                             )
                             .find('a')
                             .click(function (e) {
@@ -851,7 +851,7 @@ function webSocketConnect() {
                                     id +
                                     '" onclick="toggleoutput(this, ' +
                                     id +
-                                    ')"><span class="glyphicon glyphicon-volume-up"></span> ' +
+                                    ')"><span class="bi bi-volume-up-fill"></span> ' +
                                     name +
                                     '</button>'
                             );
@@ -1018,46 +1018,46 @@ function get_appropriate_ws_url() {
 
 var updateVolumeIcon = function (volume) {
     $('#volume-group').removeClass('hide');
-    $('#volume-icon').removeClass('glyphicon-volume-off');
-    $('#volume-icon').removeClass('glyphicon-volume-up');
-    $('#volume-icon').removeClass('glyphicon-volume-down');
+    $('#volume-icon').removeClass('bi-volume-mute-fill');
+    $('#volume-icon').removeClass('bi-volume-up-fill');
+    $('#volume-icon').removeClass('bi-volume-down-fill');
 
     if (volume == -1) {
         $('#volume-group').addClass('hide');
     } else if (volume == 0) {
-        $('#volume-icon').addClass('glyphicon-volume-off');
+        $('#volume-icon').addClass('bi-volume-mute-fill');
     } else if (volume < 50) {
-        $('#volume-icon').addClass('glyphicon-volume-down');
+        $('#volume-icon').addClass('bi-volume-down-fill');
     } else {
-        $('#volume-icon').addClass('glyphicon-volume-up');
+        $('#volume-icon').addClass('bi-volume-up-fill');
     }
 };
 
 var updatePlayIcon = function (state) {
     $('#play-icon')
-        .removeClass('glyphicon-play')
-        .removeClass('glyphicon-pause');
+        .removeClass('bi-play-fill')
+        .removeClass('bi-pause-fill');
     $('#track-icon')
-        .removeClass('glyphicon-play')
-        .removeClass('glyphicon-pause')
-        .removeClass('glyphicon-stop');
+        .removeClass('bi-play-fill')
+        .removeClass('bi-pause-fill')
+        .removeClass('bi-stop-fill');
 
     if (state == 1) {
         // stop
-        $('#play-icon').addClass('glyphicon-play');
-        $('#track-icon').addClass('glyphicon-stop');
+        $('#play-icon').addClass('bi-play-fill');
+        $('#track-icon').addClass('bi-stop-fill');
         document.getElementById('player').pause();
     } else if (state == 2) {
         // play
-        $('#play-icon').addClass('glyphicon-pause');
-        $('#track-icon').addClass('glyphicon-play');
+        $('#play-icon').addClass('bi-pause-fill');
+        $('#track-icon').addClass('bi-play-fill');
         if ($.cookie('autoplay') === 'true' && player.paused) {
             clickLocalPlay();
         }
     } else {
         // pause
-        $('#play-icon').addClass('glyphicon-play');
-        $('#track-icon').addClass('glyphicon-pause');
+        $('#play-icon').addClass('bi-play-fill');
+        $('#track-icon').addClass('bi-pause-fill');
         document.getElementById('player').pause();
     }
 };
@@ -1086,7 +1086,7 @@ function updateDB() {
 }
 
 function clickPlay() {
-    if ($('#track-icon').hasClass('glyphicon-stop'))
+    if ($('#track-icon').hasClass('bi-stop-fill'))
         socket.send('MPD_API_SET_PLAY');
     else socket.send('MPD_API_SET_PAUSE');
 }
@@ -1094,10 +1094,10 @@ function clickPlay() {
 function clickLocalPlay() {
     var player = document.getElementById('player');
     $('#localplay-icon')
-        .removeClass('glyphicon-play')
-        .removeClass('glyphicon-pause');
+        .removeClass('bi-play-fill')
+        .removeClass('bi-pause-fill');
 
-    if (!$('#track-icon').hasClass('glyphicon-play')) {
+    if (!$('#track-icon').hasClass('bi-play-fill')) {
         clickPlay();
     }
 
@@ -1109,13 +1109,13 @@ function clickLocalPlay() {
             console.log('playing mpd stream: ' + player.src);
             player.load();
             player.play();
-            $('#localplay-icon').addClass('glyphicon-pause');
+            $('#localplay-icon').addClass('bi-pause-fill');
         } else {
             $('#mpdstream').change(function () {
                 clickLocalPlay();
                 $(this).unbind('change');
             });
-            $('#localplay-icon').addClass('glyphicon-play');
+            $('#localplay-icon').addClass('bi-play-fill');
             getHost();
         }
     } else {
@@ -1462,7 +1462,7 @@ function add_filter() {
             pagination +
             '/' +
             browsepath +
-            '" class="glyphicon glyphicon-list"></a>'
+            '" class="bi bi-music-note-list"></a>'
     );
     $('#f' + filter).addClass('active');
     $('#filter').removeClass('hide');

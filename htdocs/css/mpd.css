@@ -421,6 +421,7 @@ body {
 
 .queue-list-wrapper {
   margin: 0 -8px;
+  overflow-x: hidden;
 }
 
 /* Table Styles - Minimal & Clean */
@@ -430,6 +431,7 @@ body {
   border-spacing: 0;
   margin: 0;
   border: none !important;
+  table-layout: fixed;
 }
 
 .table thead {

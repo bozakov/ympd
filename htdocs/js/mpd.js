@@ -34,34 +34,17 @@ var isTouch = Modernizr.touch ? 1 : 0;
 var filter = '';
 var scrobbler = '';
 var wss_auth_token = '';
-
-// Queue loading can race MPD reconnects; track whether we need to refresh it
-var queue_needs_refresh = true;
-var last_queue_request_ms = 0;
-
-function requestQueueThrottled() {
-    if (current_app !== 'queue') return;
-    if (wss_auth_token === '') return;
-    if (!socket || socket.readyState !== WebSocket.OPEN) return;
-    if (!queue_needs_refresh) return;
-
-    var now = Date.now();
-    if (now - last_queue_request_ms < 1500) return;
-    last_queue_request_ms = now;
-    socket.send('MPD_API_GET_QUEUE,' + pagination);
-}
+var reconnect_attempts = 0;
 
 var app = $.sammy(function () {
     function runBrowse() {
         current_app = 'queue';
 
-        queue_needs_refresh = true;
-
         $('#breadcrump').addClass('hide');
         $('#filter').addClass('hide');
         $('#salamisandwich').removeClass('hide').find('tr:gt(0)').remove();
-        
-        requestQueueThrottled();
+        if (wss_auth_token !== '')
+            socket.send('MPD_API_GET_QUEUE,' + pagination);
 
         $('#panel-heading').text('Queue');
         $('#panel-heading-info').empty();
@@ -305,6 +288,7 @@ function webSocketConnect() {
 
     try {
         socket.onopen = function () {
+            reconnect_attempts = 0;
             console.log('connected');
             $('.top-right')
                 .notify({
@@ -327,8 +311,6 @@ function webSocketConnect() {
             switch (obj.type) {
                 case 'queue':
                     if (current_app !== 'queue') break;
-
-                    queue_needs_refresh = false;
 
                     if (obj.totalTime > 0) {
                         var hours = Math.floor(obj.totalTime / 3600);
@@ -916,8 +898,6 @@ function webSocketConnect() {
                     }
                     break;
                 case 'disconnected':
-                    queue_needs_refresh = true;
-                    requestQueueThrottled();
                     if ($('.top-right').has('div').length == 0)
                         $('.top-right')
                             .notify({
@@ -980,9 +960,6 @@ function webSocketConnect() {
                         /* emit initial request for output names */
                         socket.send('MPD_API_GET_OUTPUTS');
                         socket.send('MPD_API_GET_CHANNELS');
-
-                        queue_needs_refresh = true;
-                        requestQueueThrottled();
                     } else webSocketAuthenticate();
 
                     break;
@@ -1002,17 +979,26 @@ function webSocketConnect() {
         socket.onclose = function () {
             console.log('disconnected');
             wss_auth_token = '';
-            $('.top-right')
-                .notify({
-                    message: {
-                        text: 'Connection to ympd lost, retrying in 3 seconds ',
-                    },
-                    type: 'danger',
-                    onClose: function () {
-                        webSocketConnect();
-                    },
-                })
-                .show();
+            
+            // Firefox in dev containers needs immediate retry
+            var delay = reconnect_attempts === 0 ? 100 : 3000;
+            reconnect_attempts++;
+            
+            setTimeout(function() {
+                webSocketConnect();
+            }, delay);
+            
+            if (reconnect_attempts > 1) {
+                $('.top-right')
+                    .notify({
+                        message: {
+                            text: 'Connection to ympd lost, reconnecting...',
+                        },
+                        type: 'warning',
+                        fadeOut: { enabled: true, delay: 2000 },
+                    })
+                    .show();
+            }
         };
     } catch (exception) {
         alert('<p>Error' + exception);

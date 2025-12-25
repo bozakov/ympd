@@ -2,6 +2,9 @@
    (c) 2013-2014 Andrew Karpow <andy@ndyk.de>
    This project's homepage is: https://www.ympd.org
    
+   (c) 2025-2026 Zdravko Bozakov <zdravko@bozakov.com>
+   This project's homepage is: https://github.com/bozakov/ympd
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; version 2 of the License.
@@ -32,15 +35,33 @@ var filter = '';
 var scrobbler = '';
 var wss_auth_token = '';
 
+// Queue loading can race MPD reconnects; track whether we need to refresh it
+var queue_needs_refresh = true;
+var last_queue_request_ms = 0;
+
+function requestQueueThrottled() {
+    if (current_app !== 'queue') return;
+    if (wss_auth_token === '') return;
+    if (!socket || socket.readyState !== WebSocket.OPEN) return;
+    if (!queue_needs_refresh) return;
+
+    var now = Date.now();
+    if (now - last_queue_request_ms < 1500) return;
+    last_queue_request_ms = now;
+    socket.send('MPD_API_GET_QUEUE,' + pagination);
+}
+
 var app = $.sammy(function () {
     function runBrowse() {
         current_app = 'queue';
 
+        queue_needs_refresh = true;
+
         $('#breadcrump').addClass('hide');
         $('#filter').addClass('hide');
         $('#salamisandwich').removeClass('hide').find('tr:gt(0)').remove();
-        if (wss_auth_token !== '')
-            socket.send('MPD_API_GET_QUEUE,' + pagination);
+        
+        requestQueueThrottled();
 
         $('#panel-heading').text('Queue');
         $('#panel-heading-info').empty();
@@ -294,7 +315,8 @@ function webSocketConnect() {
 
             app.run();
 
-            if (wss_auth_token === '') webSocketAuthenticate();
+            if (wss_auth_token === '')
+                webSocketAuthenticate();
         };
 
         socket.onmessage = function got_packet(msg) {
@@ -305,6 +327,8 @@ function webSocketConnect() {
             switch (obj.type) {
                 case 'queue':
                     if (current_app !== 'queue') break;
+
+                    queue_needs_refresh = false;
 
                     if (obj.totalTime > 0) {
                         var hours = Math.floor(obj.totalTime / 3600);
@@ -778,7 +802,7 @@ function webSocketConnect() {
                         obj.data.elapsedTime - elapsed_minutes * 60;
 
                     document.getElementById('volumeslider').value = obj.data.volume;
-                    $('#volume-number').text(obj.data.volume);
+                    $('#volume-number').text(obj.data.volume + ' %');
                     var progress = Math.floor(
                         (100 * obj.data.elapsedTime) / obj.data.totalTime
                     );
@@ -815,6 +839,9 @@ function webSocketConnect() {
                     } else {
                         $('#btnrandom').removeClass('active').text('Off');
                     }
+
+                    // If MPD just became available after startup/reconnect, load the queue now.
+                    requestQueueThrottled();
 
                     if (obj.data.consume) {
                         $('#btnconsume').addClass('active').text('On');
@@ -889,6 +916,8 @@ function webSocketConnect() {
                     }
                     break;
                 case 'disconnected':
+                    queue_needs_refresh = true;
+                    requestQueueThrottled();
                     if ($('.top-right').has('div').length == 0)
                         $('.top-right')
                             .notify({
@@ -951,6 +980,9 @@ function webSocketConnect() {
                         /* emit initial request for output names */
                         socket.send('MPD_API_GET_OUTPUTS');
                         socket.send('MPD_API_GET_CHANNELS');
+
+                        queue_needs_refresh = true;
+                        requestQueueThrottled();
                     } else webSocketAuthenticate();
 
                     break;
@@ -1063,14 +1095,15 @@ var updatePlayIcon = function (state) {
 };
 
 var updatePageTitle = function (songInfo) {
-    if (!songInfo || (!songInfo.artist && !songInfo.title)) {
+    if (!songInfo || !songInfo.title || songInfo.title === '-') {
         document.title = 'ympd';
         return;
     }
-    if (songInfo.artist) {
-        if (songInfo.title) {
-            document.title = songInfo.artist + ' - ' + songInfo.title;
-        }
+    
+    var hasArtist = songInfo.artist && songInfo.artist !== '-';
+    
+    if (hasArtist) {
+        document.title = songInfo.artist + ' - ' + songInfo.title;
     } else {
         document.title = songInfo.title;
     }

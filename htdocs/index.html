@@ -8,7 +8,7 @@
       name="description"
       content="ympd - fast and lightweight MPD webclient"
     />
-    <meta name="author" content="andy@ndyk.de" />
+    <meta name="author" content="zdravko@bozakov.de" />
 
     <title>ympd</title>
 
@@ -55,15 +55,15 @@
           </div>
         </div>
 
-        <div class="volume-section">
-          <div class="volume-label">
+        <div class="switch volume-switch">
+          <div class="label">
             <i id="volume-icon" class="bi bi-volume-up-fill"></i>
             <span>Volume</span>
           </div>
-          <div class="volume-slider-container">
-            <input type="range" id="volumeslider" min="0" max="100" value="0" />
-            <span id="volume-number" class="volume-value"></span>
-          </div>
+        </div>
+        <div class="volume-slider-container">
+          <input type="range" id="volumeslider" min="0" max="100" value="0" />
+          <span id="volume-number" class="volume-value"></span>
         </div>
 
         <div class="sep"></div>

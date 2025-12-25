@@ -74,7 +74,8 @@ int callback_mpd(struct mg_connection *c) {
         return MG_TRUE;
 
     if (mpd.conn_state != MPD_CONNECTED && cmd_id != MPD_API_SET_MPDHOST &&
-        cmd_id != MPD_API_GET_MPDHOST && cmd_id != MPD_API_SET_MPDPASS)
+        cmd_id != MPD_API_GET_MPDHOST && cmd_id != MPD_API_SET_MPDPASS &&
+        cmd_id != MPD_API_AUTHORIZE)
         return MG_TRUE;
 
     switch (cmd_id) {
@@ -88,6 +89,7 @@ int callback_mpd(struct mg_connection *c) {
 
             free(p_charbuf);
             p_charbuf = strdup(c->content);
+            free(s->auth_token);
             s->auth_token = strdup(get_arg1(p_charbuf));
             if (!strcmp(mpd.wss_auth_token, s->auth_token))
                 s->authorized = 1;
@@ -685,10 +687,6 @@ int mpd_put_queue(char *buffer, unsigned int offset) {
             cur += json_emit_quoted_str(cur, end - cur, mpd_get_album(song));
             cur += json_emit_raw_str(cur, end - cur, ",\"title\":");
             cur += json_emit_quoted_str(cur, end - cur, mpd_get_title(song));
-            cur += json_emit_raw_str(cur, end - cur, ",\"artist\":");
-            cur += json_emit_quoted_str(cur, end - cur, mpd_get_artist(song));
-            cur += json_emit_raw_str(cur, end - cur, ",\"album\":");
-            cur += json_emit_quoted_str(cur, end - cur, mpd_get_album(song));
             cur += json_emit_raw_str(cur, end - cur, "},");
 
             totalTime += drtn;
@@ -810,10 +808,6 @@ int mpd_search(char *buffer, char *searchstr) {
             cur += json_emit_int(cur, end - cur, mpd_song_get_duration(song));
             cur += json_emit_raw_str(cur, end - cur, ",\"title\":");
             cur += json_emit_quoted_str(cur, end - cur, mpd_get_title(song));
-            cur += json_emit_raw_str(cur, end - cur, ",\"artist\":");
-            cur += json_emit_quoted_str(cur, end - cur, mpd_get_artist(song));
-            cur += json_emit_raw_str(cur, end - cur, ",\"album\":");
-            cur += json_emit_quoted_str(cur, end - cur, mpd_get_album(song));
             cur += json_emit_raw_str(cur, end - cur, "},");
             mpd_song_free(song);
 

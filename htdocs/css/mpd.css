@@ -742,17 +742,12 @@ body {
 }
 
 /* Volume Section in Sidebar */
-.volume-section {
+.volume-switch {
   margin: 16px 0;
+  display: block;
 }
 
-.volume-section .volume-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 600;
+.volume-switch .label {
   margin-bottom: 12px;
 }
 

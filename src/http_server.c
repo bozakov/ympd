@@ -39,17 +39,18 @@ int callback_http(struct mg_connection *c) {
     }
 
     if (!strcmp(c->uri, "/wss-auth")) {
-        unsigned char salt[WSS_AUTH_TOKEN_SIZE + 1];
+        if (!mpd.wss_auth_token) {
+            unsigned char salt[WSS_AUTH_TOKEN_SIZE + 1];
 
-        RAND_bytes(salt, WSS_AUTH_TOKEN_SIZE);
-        for (int i = 0; i <= WSS_AUTH_TOKEN_SIZE; i++) salt[i] = salt[i] % 26 + 65;
-        salt[WSS_AUTH_TOKEN_SIZE] = 0;
-        if (mpd.wss_auth_token)
-            free(mpd.wss_auth_token);
-        mpd.wss_auth_token = strdup((char *)salt);
+            RAND_bytes(salt, WSS_AUTH_TOKEN_SIZE);
+            for (int i = 0; i <= WSS_AUTH_TOKEN_SIZE; i++)
+                salt[i] = salt[i] % 26 + 65;
+            salt[WSS_AUTH_TOKEN_SIZE] = 0;
+            mpd.wss_auth_token = strdup((char *)salt);
+        }
 
         mg_send_header(c, "Content-Type", "text/plain");
-        mg_send_data(c, salt, WSS_AUTH_TOKEN_SIZE);
+        mg_send_data(c, mpd.wss_auth_token, WSS_AUTH_TOKEN_SIZE);
 
         return MG_TRUE;
     }

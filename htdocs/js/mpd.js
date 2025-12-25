@@ -866,13 +866,10 @@ function webSocketConnect() {
                     if (Object.keys(obj.data).length) {
                         $.each(obj.data, function (id, name) {
                             var btn = $(
-                                '<button class="ghost" id="btnoutput' +
-                                    id +
-                                    '" onclick="toggleoutput(this, ' +
-                                    id +
-                                    ')"><span class="bi bi-volume-up-fill"></span> ' +
-                                    name +
-                                    '</button>'
+                                '<div class="switch">'
+                                + '<div class="label"><span class="bi bi-speaker"></span> ' + name + '</div>'
+                                + '<button id="btnoutput' + id + '" type="button" class="toggle-btn" onclick="toggleoutput(this, ' + id + ')">Off</button>'
+                                + '</div>'
                             );
                             btn.appendTo($('#btn-outputs-block'));
                         });

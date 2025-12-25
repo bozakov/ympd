@@ -5,11 +5,11 @@
 
 :root {
   /* Accent Color Palette - Used for highlights, buttons, and interactive elements */
-  --color-1: #b80c09;
-  --color-2: #0b4f6c;
-  --color-3: #fbfbff;
-  --color-4: #01baef;
-  --color-5: #040f16;
+  --color-1: #c62828;
+  --color-2: #0f6b7a;
+  --color-3: #ffffff;
+  --color-4: #00a8e0;
+  --color-5: #031216;
   
   /* Base Theme Colors - Light Mode (change these for dark mode) */
   --base-bg: #f5f5f5;
@@ -43,15 +43,24 @@
   --muted: rgba(var(--base-text-opacity), 0.45);
   
   /* Interactive Elements - Using palette colors */
-  --accent: var(--color-3);
-  --accent-bright: var(--color-4);
-  --accent-gradient-start: var(--color-3);
-  --accent-gradient-end: var(--color-4);
+  /* Semantic accent roles (map palette -> roles used across the UI) */
+  --accent-primary: var(--color-4);
+  --accent-secondary: var(--color-2);
+  --accent-danger: var(--color-1);
+  --accent-surface: var(--color-3);
+  --accent-strong: var(--color-5);
+  --accent-on-primary: #ffffff;
+
+  /* Interactive Elements - Using semantic accents */
+  --accent: var(--accent-primary);
+  --accent-bright: var(--accent-primary);
+  --accent-gradient-start: var(--accent-surface);
+  --accent-gradient-end: var(--accent-primary);
   
   /* Hover states - derived from accent colors */
-  --hover-bg: color-mix(in srgb, var(--color-4) 15%, transparent);
-  --active-bg: color-mix(in srgb, var(--color-4) 20%, transparent);
-  --active-hover-bg: color-mix(in srgb, var(--color-4) 25%, transparent);
+  --hover-bg: color-mix(in srgb, var(--accent-primary) 15%, transparent);
+  --active-bg: color-mix(in srgb, var(--accent-primary) 20%, transparent);
+  --active-hover-bg: color-mix(in srgb, var(--accent-primary) 25%, transparent);
   
   /* UI Elements */
   --glass: rgba(var(--shadow-color), var(--glass-opacity));
@@ -123,7 +132,7 @@ body {
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background: var(--color-4);
+  background: var(--accent-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -922,8 +931,8 @@ input[type="range"]::-moz-range-track {
   }
 }
 .notifications > div[data-notify-type="info"] {
-  border-left: 4px solid var(--color-4);
-  background: linear-gradient(135deg, rgba(1, 186, 239, 0.1) 0%, var(--surface) 100%);
+  border-left: 4px solid var(--accent-primary);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent-primary) 10%, transparent) 0%, var(--surface) 100%);
 }
 .notifications > div[data-notify-type="success"] {
   border-left: 4px solid #10b981;
@@ -934,8 +943,8 @@ input[type="range"]::-moz-range-track {
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, var(--surface) 100%);
 }
 .notifications > div[data-notify-type="danger"] {
-  border-left: 4px solid var(--color-1);
-  background: linear-gradient(135deg, rgba(184, 12, 9, 0.1) 0%, var(--surface) 100%);
+  border-left: 4px solid var(--accent-danger);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent-danger) 10%, transparent) 0%, var(--surface) 100%);
 }
 .notifications > div [data-notify="message"] {
   color: var(--text-primary);

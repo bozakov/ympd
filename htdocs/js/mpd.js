@@ -960,6 +960,10 @@ function webSocketConnect() {
                         /* emit initial request for output names */
                         socket.send('MPD_API_GET_OUTPUTS');
                         socket.send('MPD_API_GET_CHANNELS');
+                        /* load queue if we're on the queue page */
+                        if (current_app === 'queue') {
+                            socket.send('MPD_API_GET_QUEUE,' + pagination);
+                        }
                     } else webSocketAuthenticate();
 
                     break;
@@ -980,22 +984,22 @@ function webSocketConnect() {
             console.log('disconnected');
             wss_auth_token = '';
             
-            // Firefox in dev containers needs immediate retry
-            var delay = reconnect_attempts === 0 ? 100 : 3000;
-            reconnect_attempts++;
-            
-            setTimeout(function() {
-                webSocketConnect();
-            }, delay);
-            
-            if (reconnect_attempts > 1) {
+            if (reconnect_attempts < 1) {
+                reconnect_attempts++;
+                setTimeout(function() {
+                    webSocketConnect();
+                }, 100);
+            } else {
                 $('.top-right')
                     .notify({
                         message: {
-                            text: 'Connection to ympd lost, reconnecting...',
+                            text: 'Connection to ympd lost, retrying in 3 seconds ',
                         },
-                        type: 'warning',
-                        fadeOut: { enabled: true, delay: 2000 },
+                        type: 'danger',
+                        fadeOut: { enabled: true, delay: 3000 },
+                        onClose: function () {
+                            webSocketConnect();
+                        },
                     })
                     .show();
             }

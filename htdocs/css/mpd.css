@@ -1123,19 +1123,100 @@ input[type="range"]::-moz-range-track {
 .notifications {
   position: fixed;
   z-index: 9999;
+  pointer-events: none;
 }
 
 /* Positioning */
 .notifications.top-right {
-  right: 10px;
-  top: 60px;
+  right: 20px;
+  top: 80px;
 }
 
 /* Notification Element */
 .notifications > div {
   position: relative;
   z-index: 9999;
-  margin: 5px 0px;
+  margin: 10px 0;
+  pointer-events: auto;
+  min-width: 280px;
+  max-width: 400px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid rgba(var(--base-text-opacity), 0.1);
+  box-shadow: 0 8px 32px rgba(var(--shadow-color), 0.15);
+  backdrop-filter: blur(10px);
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Notification types */
+.notifications > div[data-notify-type="info"] {
+  border-left: 4px solid var(--color-4);
+  background: linear-gradient(135deg, rgba(1, 186, 239, 0.1) 0%, var(--surface) 100%);
+}
+
+.notifications > div[data-notify-type="success"] {
+  border-left: 4px solid #10b981;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, var(--surface) 100%);
+}
+
+.notifications > div[data-notify-type="warning"] {
+  border-left: 4px solid #f59e0b;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, var(--surface) 100%);
+}
+
+.notifications > div[data-notify-type="danger"] {
+  border-left: 4px solid var(--color-1);
+  background: linear-gradient(135deg, rgba(184, 12, 9, 0.1) 0%, var(--surface) 100%);
+}
+
+/* Notification content */
+.notifications > div [data-notify="message"] {
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.notifications > div [data-notify="title"] {
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* Close button */
+.notifications > div [data-notify="dismiss"] {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notifications > div [data-notify="dismiss"]:hover {
+  color: var(--text-primary);
 }
 
 button {

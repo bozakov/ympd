@@ -81,9 +81,9 @@ var app = $.sammy(function () {
         $('#salamisandwich').removeClass('hide').find('tr:gt(0)').remove();
         socket.send(
             'MPD_API_GET_BROWSE,' +
-                pagination +
-                ',' +
-                (browsepath ? browsepath : '/')
+            pagination +
+            ',' +
+            (browsepath ? browsepath : '/')
         );
         // Don't add all songs from root
         if (browsepath) {
@@ -111,10 +111,10 @@ var app = $.sammy(function () {
             full_path = full_path + chunk;
             $('#breadcrump').append(
                 '<li><a uri="' +
-                    encodeURIComponent(full_path) +
-                    '">' +
-                    chunk +
-                    '</a></li>'
+                encodeURIComponent(full_path) +
+                '">' +
+                chunk +
+                '</a></li>'
             );
             full_path += '/';
         });
@@ -139,16 +139,16 @@ var app = $.sammy(function () {
 
 $(document).ready(function () {
     webSocketConnect();
-    
+
     // Volume slider
     var volumeSlider = document.getElementById('volumeslider');
-    volumeSlider.addEventListener('input', function() {
+    volumeSlider.addEventListener('input', function () {
         socket.send('MPD_API_SET_VOLUME,' + this.value);
     });
-    
+
     // Progress/seek slider
     var progressBar = document.getElementById('progressbar');
-    progressBar.addEventListener('input', function() {
+    progressBar.addEventListener('input', function () {
         if (current_song && current_song.currentSongId >= 0) {
             var seekVal = Math.ceil(current_song.totalTime * (this.value / 100));
             socket.send(
@@ -281,7 +281,7 @@ function webSocketAuthenticate() {
 
 function webSocketConnect() {
     console.log('Connecting to WebSocket...');
-    
+
     try {
         if (typeof MozWebSocket != 'undefined') {
             socket = new MozWebSocket(get_appropriate_ws_url());
@@ -304,8 +304,8 @@ function webSocketConnect() {
             if (wss_auth_token === '')
                 webSocketAuthenticate();
         };
-        
-        socket.onerror = function(error) {
+
+        socket.onerror = function (error) {
             console.log('WebSocket Error:', error);
         };
 
@@ -327,16 +327,16 @@ function webSocketConnect() {
 
                         $('#panel-heading-info').text(
                             'Total: ' +
-                                (hours > 0
-                                    ? hours +
-                                      '\u2009h ' +
-                                      (minutes < 10 ? '0' : '')
-                                    : '') +
-                                minutes +
-                                '\u2009m ' +
-                                (seconds < 10 ? '0' : '') +
-                                seconds +
-                                '\u2009s'
+                            (hours > 0
+                                ? hours +
+                                '\u2009h ' +
+                                (minutes < 10 ? '0' : '')
+                                : '') +
+                            minutes +
+                            '\u2009m ' +
+                            (seconds < 10 ? '0' : '') +
+                            seconds +
+                            '\u2009s'
                         );
                     } else {
                         $('#panel-heading-info').empty();
@@ -349,32 +349,32 @@ function webSocketConnect() {
 
                         $('#salamisandwich > tbody').append(
                             '<tr trackid="' +
-                                obj.data[song].id +
-                                '"><td>' +
-                                (obj.data[song].pos + 1) +
-                                '</td>' +
-                                '<td>' +
-                                obj.data[song].artist +
-                                '</td>' +
-                                '<td>' +
-                                obj.data[song].album +
-                                '</td>' +
-                                '<td>' +
-                                obj.data[song].title +
-                                '</td>' +
-                                '<td>' +
-                                minutes +
-                                ':' +
-                                (seconds < 10 ? '0' : '') +
-                                seconds +
-                                '</td><td></td></tr>'
+                            obj.data[song].id +
+                            '"><td>' +
+                            (obj.data[song].pos + 1) +
+                            '</td>' +
+                            '<td>' +
+                            obj.data[song].artist +
+                            '</td>' +
+                            '<td>' +
+                            obj.data[song].album +
+                            '</td>' +
+                            '<td>' +
+                            obj.data[song].title +
+                            '</td>' +
+                            '<td>' +
+                            minutes +
+                            ':' +
+                            (seconds < 10 ? '0' : '') +
+                            seconds +
+                            '</td><td></td></tr>'
                         );
                     }
 
                     if (
                         obj.data.length &&
                         obj.data[obj.data.length - 1].pos + 1 >=
-                            pagination + MAX_ELEMENTS_PER_PAGE
+                        pagination + MAX_ELEMENTS_PER_PAGE
                     )
                         $('#next').removeClass('hide');
                     if (pagination > 0) $('#prev').removeClass('hide');
@@ -383,8 +383,8 @@ function webSocketConnect() {
                             '#salamisandwich > tbody > tr > td:last-child'
                         ).append(
                             '<a class="pull-right btn-group-hover" href="#/" ' +
-                                'onclick="trash($(this).parents(\'tr\'));">' +
-                                '<span class="bi bi-trash-fill"></span></a>'
+                            'onclick="trash($(this).parents(\'tr\'));">' +
+                            '<span class="bi bi-trash-fill"></span></a>'
                         );
                     } else {
                         $('#salamisandwich > tbody > tr').on({
@@ -393,14 +393,14 @@ function webSocketConnect() {
                                 if ($('#btntrashmodeup').hasClass('active'))
                                     doomed = $(
                                         '#salamisandwich > tbody > tr:lt(' +
-                                            ($(this).index() + 1) +
-                                            ')'
+                                        ($(this).index() + 1) +
+                                        ')'
                                     );
                                 if ($('#btntrashmodedown').hasClass('active'))
                                     doomed = $(
                                         '#salamisandwich > tbody > tr:gt(' +
-                                            ($(this).index() - 1) +
-                                            ')'
+                                        ($(this).index() - 1) +
+                                        ')'
                                     );
                                 $.each(doomed, function () {
                                     if (
@@ -412,8 +412,8 @@ function webSocketConnect() {
                                             .last()
                                             .append(
                                                 '<a class="pull-right btn-group-hover" href="#/" ' +
-                                                    'onclick="trash($(this).parents(\'tr\'));">' +
-                                                    '<span class="bi bi-trash-fill"></span></a>'
+                                                'onclick="trash($(this).parents(\'tr\'));">' +
+                                                '<span class="bi bi-trash-fill"></span></a>'
                                             )
                                             .find('a')
                                             .fadeTo('fast', 1);
@@ -424,14 +424,14 @@ function webSocketConnect() {
                                 if ($('#btntrashmodeup').hasClass('active'))
                                     doomed = $(
                                         '#salamisandwich > tbody > tr:lt(' +
-                                            ($(this).index() + 1) +
-                                            ')'
+                                        ($(this).index() + 1) +
+                                        ')'
                                     );
                                 if ($('#btntrashmodedown').hasClass('active'))
                                     doomed = $(
                                         '#salamisandwich > tbody > tr:gt(' +
-                                            ($(this).index() - 1) +
-                                            ')'
+                                        ($(this).index() - 1) +
+                                        ')'
                                     );
                                 $.each(doomed, function () {
                                     $(this)
@@ -512,15 +512,15 @@ function webSocketConnect() {
                                 }
                                 $('#salamisandwich > tbody').append(
                                     '<tr uri="' +
-                                        encodeURIComponent(obj.data[item].dir) +
-                                        '" class="' +
-                                        clazz +
-                                        '">' +
-                                        '<td><span class="bi bi-folder-open"></span></td>' +
-                                        '<td colspan="3"><a>' +
-                                        basename(obj.data[item].dir) +
-                                        '</a></td>' +
-                                        '<td></td><td></td></tr>'
+                                    encodeURIComponent(obj.data[item].dir) +
+                                    '" class="' +
+                                    clazz +
+                                    '">' +
+                                    '<td><span class="bi bi-folder-open"></span></td>' +
+                                    '<td colspan="3"><a>' +
+                                    basename(obj.data[item].dir) +
+                                    '</a></td>' +
+                                    '<td></td><td></td></tr>'
                                 );
                                 break;
                             case 'playlist':
@@ -530,17 +530,17 @@ function webSocketConnect() {
                                 }
                                 $('#salamisandwich > tbody').append(
                                     '<tr uri="' +
-                                        encodeURIComponent(
-                                            obj.data[item].plist
-                                        ) +
-                                        '" class="' +
-                                        clazz +
-                                        '">' +
-                                        '<td><span class="bi bi-music-note-list"></span></td>' +
-                                        '<td colspan="3"><a>' +
-                                        basename(obj.data[item].plist) +
-                                        '</a></td>' +
-                                        '<td></td><td></td></tr>'
+                                    encodeURIComponent(
+                                        obj.data[item].plist
+                                    ) +
+                                    '" class="' +
+                                    clazz +
+                                    '">' +
+                                    '<td><span class="bi bi-music-note-list"></span></td>' +
+                                    '<td colspan="3"><a>' +
+                                    basename(obj.data[item].plist) +
+                                    '</a></td>' +
+                                    '<td></td><td></td></tr>'
                                 );
                                 break;
                             case 'song':
@@ -563,24 +563,24 @@ function webSocketConnect() {
 
                                 $('#salamisandwich > tbody').append(
                                     '<tr uri="' +
-                                        encodeURIComponent(obj.data[item].uri) +
-                                        '" class="song">' +
-                                        '<td><span class="bi bi-music-note-beamed"></span></td>' +
-                                        '<td>' +
-                                        obj.data[item].artist +
-                                        '</td>' +
-                                        '<td>' +
-                                        obj.data[item].album +
-                                        '</td>' +
-                                        '<td>' +
-                                        obj.data[item].title +
-                                        '</td>' +
-                                        '<td>' +
-                                        minutes +
-                                        ':' +
-                                        (seconds < 10 ? '0' : '') +
-                                        seconds +
-                                        '</td><td></td></tr>'
+                                    encodeURIComponent(obj.data[item].uri) +
+                                    '" class="song">' +
+                                    '<td><span class="bi bi-music-note-beamed"></span></td>' +
+                                    '<td>' +
+                                    obj.data[item].artist +
+                                    '</td>' +
+                                    '<td>' +
+                                    obj.data[item].album +
+                                    '</td>' +
+                                    '<td>' +
+                                    obj.data[item].title +
+                                    '</td>' +
+                                    '<td>' +
+                                    minutes +
+                                    ':' +
+                                    (seconds < 10 ? '0' : '') +
+                                    seconds +
+                                    '</td><td></td></tr>'
                                 );
                                 break;
                             case 'wrap':
@@ -589,8 +589,8 @@ function webSocketConnect() {
                                 } else {
                                     $('#salamisandwich > tbody').append(
                                         '<tr><td><span class="bi bi-x-circle-fill"></span></td>' +
-                                            '<td colspan="3">Too many results, please refine your search!</td>' +
-                                            '<td></td><td></td></tr>'
+                                        '<td colspan="3">Too many results, please refine your search!</td>' +
+                                        '<td></td><td></td></tr>'
                                     );
                                 }
                                 break;
@@ -607,19 +607,19 @@ function webSocketConnect() {
                         $(appendTo)
                             .append(
                                 '<a role="button" class="pull-right btn-group-hover">' +
-                                    '<i class="bi ' +
-                                    iconClass +
-                                    '"></i></a>'
+                                '<i class="bi ' +
+                                iconClass +
+                                '"></i></a>'
                             )
                             .find('a')
                             .click(function (e) {
                                 e.stopPropagation();
                                 socket.send(
                                     onClickAction +
-                                        ',' +
-                                        decodeURIComponent(
-                                            $(this).parents('tr').attr('uri')
-                                        )
+                                    ',' +
+                                    decodeURIComponent(
+                                        $(this).parents('tr').attr('uri')
+                                    )
                                 );
                                 $('.top-right')
                                     .notify({
@@ -688,31 +688,31 @@ function webSocketConnect() {
                                     $('#browse > a').attr(
                                         'href',
                                         '#/browse/' +
-                                            pagination +
-                                            '/' +
-                                            browsepath
+                                        pagination +
+                                        '/' +
+                                        browsepath
                                     );
                                     $('#filter > a').attr(
                                         'href',
                                         '#/browse/' +
-                                            pagination +
-                                            '/' +
-                                            browsepath
+                                        pagination +
+                                        '/' +
+                                        browsepath
                                     );
                                     app.setLocation(
                                         '#/browse/' +
-                                            pagination +
-                                            '/' +
-                                            browsepath
+                                        pagination +
+                                        '/' +
+                                        browsepath
                                     );
                                     set_filter('');
                                     break;
                                 case 'song':
                                     socket.send(
                                         'MPD_API_ADD_TRACK,' +
-                                            decodeURIComponent(
-                                                $(this).attr('uri')
-                                            )
+                                        decodeURIComponent(
+                                            $(this).attr('uri')
+                                        )
                                     );
                                     $('.top-right')
                                         .notify({
@@ -731,9 +731,9 @@ function webSocketConnect() {
                                 case 'plist':
                                     socket.send(
                                         'MPD_API_ADD_PLAYLIST,' +
-                                            decodeURIComponent(
-                                                $(this).attr('uri')
-                                            )
+                                        decodeURIComponent(
+                                            $(this).attr('uri')
+                                        )
                                     );
                                     $('.top-right')
                                         .notify({
@@ -798,18 +798,18 @@ function webSocketConnect() {
 
                     $('#counter').text(
                         elapsed_minutes +
-                            ':' +
-                            (elapsed_seconds < 10 ? '0' : '') +
-                            elapsed_seconds
+                        ':' +
+                        (elapsed_seconds < 10 ? '0' : '') +
+                        elapsed_seconds
                     );
-                    
+
                     // Update total time in the progress section
                     if (obj.data.totalTime > 0) {
                         $('.progress-section .time:last').text(
                             total_minutes +
-                                ':' +
-                                (total_seconds < 10 ? '0' : '') +
-                                total_seconds
+                            ':' +
+                            (total_seconds < 10 ? '0' : '') +
+                            total_seconds
                         );
                     } else {
                         $('.progress-section .time:last').text('∞');
@@ -820,8 +820,8 @@ function webSocketConnect() {
                         .css('font-weight', '');
                     $(
                         '#salamisandwich > tbody > tr[trackid=' +
-                            obj.data.currentsongid +
-                            ']'
+                        obj.data.currentsongid +
+                        ']'
                     )
                         .addClass('active')
                         .css('font-weight', 'bold');
@@ -833,7 +833,12 @@ function webSocketConnect() {
                     }
 
                     // If MPD just became available after startup/reconnect, load the queue now.
-                    requestQueueThrottled();
+                    requestQueue();
+                    // Sends a request to the backend to fetch the current queue
+                    function requestQueue() {
+                        if (wss_auth_token !== '')
+                            socket.send('MPD_API_GET_QUEUE,' + pagination);
+                    }
 
                     if (obj.data.consume) {
                         $('#btnconsume').addClass('active').text('On');
@@ -990,11 +995,11 @@ function webSocketConnect() {
         socket.onclose = function (event) {
             console.log('disconnected (code: ' + event.code + ')');
             wss_auth_token = '';
-            
+
             if (reconnect_attempts < 1) {
                 reconnect_attempts++;
                 console.log('Silent retry attempt ' + reconnect_attempts);
-                setTimeout(function() {
+                setTimeout(function () {
                     webSocketConnect();
                 }, 1000);
             } else {
@@ -1008,8 +1013,8 @@ function webSocketConnect() {
                         fadeOut: { enabled: true, delay: 3000 }
                     })
                     .show();
-                
-                setTimeout(function() {
+
+                setTimeout(function () {
                     webSocketConnect();
                 }, 3000);
             }
@@ -1100,9 +1105,9 @@ var updatePageTitle = function (songInfo) {
         document.title = 'ympd';
         return;
     }
-    
+
     var hasArtist = songInfo.artist && songInfo.artist !== '-';
-    
+
     if (hasArtist) {
         document.title = songInfo.artist + ' - ' + songInfo.title;
     } else {
@@ -1203,9 +1208,9 @@ function basename(path) {
 function clickLove() {
     socket.send(
         'MPD_API_SEND_MESSAGE,' +
-            scrobbler +
-            ',' +
-            ($('#btnlove').hasClass('active') ? 'unlove' : 'love')
+        scrobbler +
+        ',' +
+        ($('#btnlove').hasClass('active') ? 'unlove' : 'love')
     );
     if ($('#btnlove').hasClass('active')) $('#btnlove').removeClass('active');
     else $('#btnlove').addClass('active');
@@ -1240,9 +1245,9 @@ $('#btnrepeat').on('click', function (e) {
 function toggleoutput(button, id) {
     socket.send(
         'MPD_API_TOGGLE_OUTPUT,' +
-            id +
-            ',' +
-            ($(button).hasClass('active') ? 0 : 1)
+        id +
+        ',' +
+        ($(button).hasClass('active') ? 0 : 1)
     );
 }
 
@@ -1461,51 +1466,51 @@ function add_filter() {
     $('#filter').empty();
     $('#filter').append(
         '&nbsp;<a onclick="set_filter(\'\')" href="#/browse/' +
-            pagination +
-            '/' +
-            browsepath +
-            '">All</a>'
+        pagination +
+        '/' +
+        browsepath +
+        '">All</a>'
     );
     $('#filter').append(
         '&nbsp;<a id="fnum" onclick="set_filter(\'num\')" href="#/browse/' +
-            pagination +
-            '/' +
-            browsepath +
-            '">#</a>'
+        pagination +
+        '/' +
+        browsepath +
+        '">#</a>'
     );
 
     for (i = 65; i <= 90; i++) {
         var c = String.fromCharCode(i);
         $('#filter').append(
             '&nbsp;<a id="f' +
-                c +
-                '" onclick="set_filter(\'' +
-                c +
-                '\');" href="#/browse/' +
-                pagination +
-                '/' +
-                browsepath +
-                '">' +
-                c +
-                '</a>'
+            c +
+            '" onclick="set_filter(\'' +
+            c +
+            '\');" href="#/browse/' +
+            pagination +
+            '/' +
+            browsepath +
+            '">' +
+            c +
+            '</a>'
         );
     }
 
     $('#filter').append(
         '&nbsp;<a id="fplist" onclick="set_filter(\'plist\')" href="#/browse/' +
-            pagination +
-            '/' +
-            browsepath +
-            '" class="bi bi-music-note-list"></a>'
+        pagination +
+        '/' +
+        browsepath +
+        '" class="bi bi-music-note-list"></a>'
     );
     $('#f' + filter).addClass('active');
     $('#filter').removeClass('hide');
 }
 
 // Modern UI navigation handler
-$(document).ready(function() {
+$(document).ready(function () {
     // Handle navigation button clicks
-    $('.nav button[data-href]').on('click', function() {
+    $('.nav button[data-href]').on('click', function () {
         var href = $(this).data('href');
         if (href) {
             window.location.hash = href;
@@ -1522,14 +1527,14 @@ $(document).ready(function() {
     }
 
     // Override the original button click handlers to update UI properly
-    $('#btnrandom, #btnrepeat, #btncrossfade, #btnconsume, #btnsingle').on('click', function() {
+    $('#btnrandom, #btnrepeat, #btncrossfade, #btnconsume, #btnsingle').on('click', function () {
         $(this).toggleClass('active');
         var isActive = $(this).hasClass('active');
         $(this).text(isActive ? 'On' : 'Off');
     });
 
     // Handle trash mode buttons
-    $('#trashmode button').on('click', function() {
+    $('#trashmode button').on('click', function () {
         $('#trashmode button').removeClass('active');
         $(this).addClass('active');
     });

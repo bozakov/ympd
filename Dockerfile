@@ -39,6 +39,7 @@ COPY --from=builder /app/build/mkdata /usr/bin/mkdata
 # Expose web interface port
 EXPOSE 8080
 
+# FIXME https://github.com/krallin/tini?tab=readme-ov-file
 # Use tini as init to handle signals properly
 ENTRYPOINT ["/usr/bin/tini", "--", "ympd"]
 

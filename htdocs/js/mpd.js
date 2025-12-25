@@ -804,12 +804,16 @@ function webSocketConnect() {
                     );
                     
                     // Update total time in the progress section
-                    $('.progress-section .time:last').text(
-                        total_minutes +
-                            ':' +
-                            (total_seconds < 10 ? '0' : '') +
-                            total_seconds
-                    );
+                    if (obj.data.totalTime > 0) {
+                        $('.progress-section .time:last').text(
+                            total_minutes +
+                                ':' +
+                                (total_seconds < 10 ? '0' : '') +
+                                total_seconds
+                        );
+                    } else {
+                        $('.progress-section .time:last').text('∞');
+                    }
 
                     $('#salamisandwich > tbody > tr')
                         .removeClass('active')

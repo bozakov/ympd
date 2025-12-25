@@ -933,8 +933,38 @@ input[type="range"]::-moz-range-track {
   }
 
   .now-playing {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
+    gap: 16px;
+  }
+  .now-playing .art {
+    width: 90px;
+    height: 90px;
+    min-width: 90px;
+    margin-bottom: 0;
+  }
+  .now-playing .meta {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 6px;
+  }
+  .now-playing .player {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .now-playing .controls {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: auto;
+    gap: 8px;
+  }
+  .now-playing .progress-section {
+    margin-top: 2px;
   }
 
   .art {

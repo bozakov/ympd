@@ -180,7 +180,7 @@ $(document).ready(function () {
                         text: 'music stream stalled - trying to recover...',
                     },
                     type: 'danger',
-                    fadeOut: { enabled: true, delay: 1000 },
+                    fadeOut: { enabled: true, delay: 3000 },
                 })
                 .show();
         }
@@ -206,7 +206,7 @@ $(document).ready(function () {
                                 text: 'Audio playback aborted by user.',
                             },
                             type: 'info',
-                            fadeOut: { enabled: true, delay: 1000 },
+                            fadeOut: { enabled: true, delay: 3000 },
                         })
                         .show();
                     break;
@@ -217,7 +217,7 @@ $(document).ready(function () {
                                 text: 'Network error while playing audio.',
                             },
                             type: 'danger',
-                            fadeOut: { enabled: true, delay: 1000 },
+                            fadeOut: { enabled: true, delay: 3000 },
                         })
                         .show();
                     break;
@@ -228,7 +228,7 @@ $(document).ready(function () {
                                 text: 'Audio playback aborted. Did you unplug your headphones?',
                             },
                             type: 'danger',
-                            fadeOut: { enabled: true, delay: 1000 },
+                            fadeOut: { enabled: true, delay: 3000 },
                         })
                         .show();
                     break;
@@ -239,7 +239,7 @@ $(document).ready(function () {
                                 text: 'Error while loading audio (server, network or format error).',
                             },
                             type: 'danger',
-                            fadeOut: { enabled: true, delay: 1000 },
+                            fadeOut: { enabled: true, delay: 3000 },
                         })
                         .show();
                     break;
@@ -250,7 +250,7 @@ $(document).ready(function () {
                                 text: 'Unknown error while playing audio.',
                             },
                             type: 'danger',
-                            fadeOut: { enabled: true, delay: 1000 },
+                            fadeOut: { enabled: true, delay: 3000 },
                         })
                         .show();
                     break;
@@ -280,20 +280,22 @@ function webSocketAuthenticate() {
 }
 
 function webSocketConnect() {
-    if (typeof MozWebSocket != 'undefined') {
-        socket = new MozWebSocket(get_appropriate_ws_url());
-    } else {
-        socket = new WebSocket(get_appropriate_ws_url());
-    }
-
+    console.log('Connecting to WebSocket...');
+    
     try {
+        if (typeof MozWebSocket != 'undefined') {
+            socket = new MozWebSocket(get_appropriate_ws_url());
+        } else {
+            socket = new WebSocket(get_appropriate_ws_url());
+        }
+
         socket.onopen = function () {
             reconnect_attempts = 0;
             console.log('connected');
             $('.top-right')
                 .notify({
                     message: { text: 'Connected to ympd' },
-                    fadeOut: { enabled: true, delay: 500 },
+                    fadeOut: { enabled: true, delay: 2000 },
                 })
                 .show();
 
@@ -301,6 +303,10 @@ function webSocketConnect() {
 
             if (wss_auth_token === '')
                 webSocketAuthenticate();
+        };
+        
+        socket.onerror = function(error) {
+            console.log('WebSocket Error:', error);
         };
 
         socket.onmessage = function got_packet(msg) {
@@ -905,7 +911,7 @@ function webSocketConnect() {
                                     text: 'ympd lost connection to MPD ',
                                 },
                                 type: 'danger',
-                                fadeOut: { enabled: true, delay: 1000 },
+                                fadeOut: { enabled: true, delay: 3000 },
                             })
                             .show();
                     break;
@@ -980,32 +986,36 @@ function webSocketConnect() {
             }
         };
 
-        socket.onclose = function () {
-            console.log('disconnected');
+        socket.onclose = function (event) {
+            console.log('disconnected (code: ' + event.code + ')');
             wss_auth_token = '';
             
             if (reconnect_attempts < 1) {
                 reconnect_attempts++;
+                console.log('Silent retry attempt ' + reconnect_attempts);
                 setTimeout(function() {
                     webSocketConnect();
-                }, 100);
+                }, 1000);
             } else {
+                console.log('Connection lost. Retrying in 3 seconds...');
                 $('.top-right')
                     .notify({
                         message: {
                             text: 'Connection to ympd lost, retrying in 3 seconds ',
                         },
                         type: 'danger',
-                        fadeOut: { enabled: true, delay: 3000 },
-                        onClose: function () {
-                            webSocketConnect();
-                        },
+                        fadeOut: { enabled: true, delay: 3000 }
                     })
                     .show();
+                
+                setTimeout(function() {
+                    webSocketConnect();
+                }, 3000);
             }
         };
     } catch (exception) {
-        alert('<p>Error' + exception);
+        console.error('WebSocket creation failed:', exception);
+        setTimeout(webSocketConnect, 3000);
     }
 }
 

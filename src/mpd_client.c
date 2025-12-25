@@ -427,7 +427,7 @@ void mpd_poll(struct mg_server *s) {
             fprintf(stdout, "MPD Connecting to %s:%d\n", mpd.host, mpd.port);
             mpd.conn = mpd_connection_new(mpd.host, mpd.port, 3000);
             if (mpd.conn == NULL) {
-                fprintf(stderr, "Out of memory.");
+                fprintf(stderr, "Out of memory.\n");
                 mpd.conn_state = MPD_FAILURE;
                 return;
             }

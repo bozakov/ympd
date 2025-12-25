@@ -2,7 +2,7 @@
    (c) 2013-2014 Andrew Karpow <andy@ndyk.de>
    This project's homepage is: https://www.ympd.org
    
-   (c) 2025-2026 Zdravko Bozakov <zdravko@bozakov.com>
+   (c) 2025-2026 Zdravko Bozakov <git@bozakov.de>
    This project's homepage is: https://github.com/bozakov/ympd
 
    This program is free software; you can redistribute it and/or modify
@@ -36,47 +36,54 @@ var scrobbler = '';
 var wss_auth_token = '';
 var reconnect_attempts = 0;
 
-// Lightweight replacement for bootstrap-notify using Bootstrap alerts.
-// Keeps the old API shape used in this file: $(selector).notify(opts).show();
+// Minimal notify replacement using Bootstrap alerts.
+// Usage examples:
+//  $('.top-right').notify('Hello');
+//  $('.top-right').notify({ message: { text: 'Hi' }, type: 'danger', fadeOut: { enabled: true, delay: 3000 } });
 (function ($) {
     $.fn.notify = function (opts) {
-        opts = opts || {};
-        var msg = opts.message || {};
         var text = '';
-        var isHtml = false;
-        if (typeof msg.html !== 'undefined') {
-            text = msg.html;
-            isHtml = true;
-        } else if (typeof msg.text !== 'undefined') {
-            // escape text
-            text = $('<div/>').text(msg.text).html();
+        var type = 'info';
+        var delay = 3000;
+
+        if (typeof opts === 'string') {
+            text = $('<div/>').text(opts).html();
+        } else if (opts && opts.message) {
+            if (typeof opts.message.html !== 'undefined') text = opts.message.html;
+            else if (typeof opts.message.text !== 'undefined') text = $('<div/>').text(opts.message.text).html();
         }
 
-        var type = (opts.type || 'info').toLowerCase();
+        if (opts && opts.type) type = opts.type;
+        if (opts && opts.fadeOut && typeof opts.fadeOut.delay !== 'undefined') delay = opts.fadeOut.delay;
+        if (opts && typeof opts.delay !== 'undefined') delay = opts.delay;
+
         var cls = 'alert-info';
         if (type === 'danger' || type === 'error') cls = 'alert-danger';
         else if (type === 'warning') cls = 'alert-warning';
         else if (type === 'success') cls = 'alert-success';
 
-        var $alert = $('<div class="alert ' + cls + ' alert-dismissible" role="alert" style="display:none; margin:6px;">' +
-            (isHtml ? text : text) +
-            '<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-            '</div>');
+        var $alert = $(
+            '<div class="alert ' + cls + ' alert-dismissible" role="alert" style="display:none; margin:6px;">' +
+            text +
+            '<button type="button" class="btn-close" aria-label="Close"></button>' +
+            '</div>'
+        );
 
-        // close button handler
-        $alert.find('.close').on('click', function () {
-            $alert.fadeOut('fast', function () { $alert.remove(); });
-        });
-
+        // append and show
         this.append($alert);
+        $alert.fadeIn('fast');
 
-        // handle fadeOut option (bootstrap-notify used fadeOut.enabled + delay)
-        if (opts.fadeOut && opts.fadeOut.enabled) {
-            var delay = opts.fadeOut.delay || 3000;
-            setTimeout(function () { $alert.fadeOut('fast', function () { $alert.remove(); }); }, delay);
+        // auto dismiss
+        if (delay > 0) {
+            setTimeout(function () {
+                $alert.fadeOut('fast', function () { $alert.remove(); });
+            }, delay);
         }
 
-        return $alert; // returned jQuery element supports .show()
+        // close button
+        $alert.find('.btn-close').on('click', function () { $alert.fadeOut('fast', function () { $alert.remove(); }); });
+
+        return $alert;
     };
 })(jQuery);
 

@@ -165,10 +165,10 @@ $(document).ready(function () {
     });
 
     if (!notificationsSupported()) $('#btnnotify').addClass('disabled');
-    else if ($.cookie('notification') === 'true')
+    else if (Cookies.get('notification') === 'true')
         $('#btnnotify').addClass('active');
 
-    if ($.cookie('autoplay') === 'true') $('#btnautoplay').addClass('active');
+    if (Cookies.get('autoplay') === 'true') $('#btnautoplay').addClass('active');
 
     document.getElementById('player').addEventListener('stalled', function () {
         if (!document.getElementById('player').paused) {
@@ -945,7 +945,7 @@ function webSocketConnect() {
                         notification += obj.data.album + '<br />';
                     }
 
-                    if ($.cookie('notification') === 'true')
+                    if (Cookies.get('notification') === 'true')
                         songNotify(
                             obj.data.title,
                             obj.data.artist,
@@ -1089,7 +1089,7 @@ var updatePlayIcon = function (state) {
         // play
         $('#play-icon').addClass('bi-pause-fill');
         $('#track-icon').addClass('bi-play-fill');
-        if ($.cookie('autoplay') === 'true' && player.paused) {
+        if (Cookies.get('autoplay') === 'true' && player.paused) {
             clickLocalPlay();
         }
     } else {
@@ -1141,7 +1141,7 @@ function clickLocalPlay() {
     }
 
     if (player.paused) {
-        var mpdstream = $.cookie('mpdstream');
+        var mpdstream = Cookies.get('mpdstream');
 
         if (mpdstream) {
             player.src = mpdstream;
@@ -1163,7 +1163,7 @@ function clickLocalPlay() {
 }
 
 function setLocalStream(mpdhost) {
-    var mpdstream = $.cookie('mpdstream');
+    var mpdstream = Cookies.get('mpdstream');
 
     if (!mpdstream) {
         mpdstream = 'http://';
@@ -1171,7 +1171,7 @@ function setLocalStream(mpdhost) {
         else mpdstream += mpdhost;
         mpdstream += ':8000/';
 
-        $.cookie('mpdstream', mpdstream, { expires: 424242 });
+        Cookies.set('mpdstream', mpdstream, { expires: 424242 });
     }
 
     $('#mpdstream').val(mpdstream);
@@ -1259,8 +1259,8 @@ $('#trashmode')
     });
 
 $('#btnnotify').on('click', function (e) {
-    if ($.cookie('notification') === 'true') {
-        $.cookie('notification', false);
+    if (Cookies.get('notification') === 'true') {
+        Cookies.remove('notification');
     } else {
         Notification.requestPermission(function (permission) {
             if (!('permission' in Notification)) {
@@ -1268,7 +1268,7 @@ $('#btnnotify').on('click', function (e) {
             }
 
             if (permission === 'granted') {
-                $.cookie('notification', true, { expires: 424242 });
+                Cookies.set('notification', true, { expires: 424242 });
                 $('btnnotify').addClass('active');
             }
         });
@@ -1276,10 +1276,10 @@ $('#btnnotify').on('click', function (e) {
 });
 
 $('#btnautoplay').on('click', function (e) {
-    if ($.cookie('autoplay') === 'true') {
-        $.cookie('autoplay', false);
+    if (Cookies.get('autoplay') === 'true') {
+        Cookies.remove('autoplay');
     } else {
-        $.cookie('autoplay', true, { expires: 424242 });
+        Cookies.set('autoplay', true, { expires: 424242 });
         $('#btnautoplay').addClass('active');
     }
 });
@@ -1359,7 +1359,7 @@ function confirmSettings() {
     socket.send(
         'MPD_API_SET_MPDHOST,' + $('#mpdport').val() + ',' + $('#mpdhost').val()
     );
-    $.cookie('mpdstream', $('#mpdstream').val(), { expires: 424242 });
+    Cookies.set('mpdstream', $('#mpdstream').val(), { expires: 424242 });
     $('#settings').modal('hide');
 }
 

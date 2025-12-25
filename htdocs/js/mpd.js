@@ -36,6 +36,50 @@ var scrobbler = '';
 var wss_auth_token = '';
 var reconnect_attempts = 0;
 
+// Lightweight replacement for bootstrap-notify using Bootstrap alerts.
+// Keeps the old API shape used in this file: $(selector).notify(opts).show();
+(function ($) {
+    $.fn.notify = function (opts) {
+        opts = opts || {};
+        var msg = opts.message || {};
+        var text = '';
+        var isHtml = false;
+        if (typeof msg.html !== 'undefined') {
+            text = msg.html;
+            isHtml = true;
+        } else if (typeof msg.text !== 'undefined') {
+            // escape text
+            text = $('<div/>').text(msg.text).html();
+        }
+
+        var type = (opts.type || 'info').toLowerCase();
+        var cls = 'alert-info';
+        if (type === 'danger' || type === 'error') cls = 'alert-danger';
+        else if (type === 'warning') cls = 'alert-warning';
+        else if (type === 'success') cls = 'alert-success';
+
+        var $alert = $('<div class="alert ' + cls + ' alert-dismissible" role="alert" style="display:none; margin:6px;">' +
+            (isHtml ? text : text) +
+            '<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+            '</div>');
+
+        // close button handler
+        $alert.find('.close').on('click', function () {
+            $alert.fadeOut('fast', function () { $alert.remove(); });
+        });
+
+        this.append($alert);
+
+        // handle fadeOut option (bootstrap-notify used fadeOut.enabled + delay)
+        if (opts.fadeOut && opts.fadeOut.enabled) {
+            var delay = opts.fadeOut.delay || 3000;
+            setTimeout(function () { $alert.fadeOut('fast', function () { $alert.remove(); }); }, delay);
+        }
+
+        return $alert; // returned jQuery element supports .show()
+    };
+})(jQuery);
+
 var app = $.sammy(function () {
     function runBrowse() {
         current_app = 'queue';

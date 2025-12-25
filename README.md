@@ -1,37 +1,3 @@
-## Docker Usage
-
-You can build and run ympd using Docker for easy deployment:
-
-### Build the Docker image
-
-```sh
-docker build -t ympd .
-```
-
-### Run ympd with Docker
-
-```sh
-# Example: Expose web UI on port 8080 and connect to MPD at host 'mpdhost' (default port 6600)
-docker run --rm -p 8080:8080 ympd -h <mpdhost> -w 8080
-```
-
-Replace `<mpdhost>` with the address of your MPD server. You can pass any ympd flags after the image name.
-
-#### Example with custom MPD host and port:
-```sh
-docker run --rm -p 8080:8080 ympd -h 192.168.1.100 -p 6600 -w 8080
-```
-
-#### Example with SSL (see SSL Support section below for certificate setup):
-```sh
-docker run --rm -p 8081:8081 -v /path/to/ssl.pem:/ssl.pem ympd -w "ssl://8081:/ssl.pem"
-```
-
----
-[![Build Status](https://travis-ci.org/notandy/ympd.svg)](https://travis-ci.org/notandy/ympd)
-ympd
-====
-
 Standalone MPD Web GUI written in C, utilizing Websockets and Bootstrap/JS
 
 http://www.ympd.org
@@ -44,6 +10,8 @@ http://www.ympd.org
 -   cmake 2.6: http://cmake.org/
 -   OpenSSL: https://www.openssl.org/
 
+```sh
+# On Debian/Ubuntu based systems, you can install the dependencies with:
 apt-get install -y --no-install-recommends \
 		ca-certificates \
 		sudo \
@@ -55,6 +23,7 @@ apt-get install -y --no-install-recommends \
 		libmpdclient-dev \
 		libssl-dev \
 		clang-format
+```
 
 ## Unix Build Instructions
 
@@ -96,6 +65,31 @@ To run ympd with SSL support:
 # ./ympd -w "ssl://8081:/path/to/ssl.pem"
 ```
 
+## Docker
+
+You can build and run ympd using Docker for easy deployment:
+
+### Build the Docker image
+
+```sh
+docker build -t ympd .
+```
+
+### Run ympd with Docker
+
+
+```sh
+# Example: Expose web UI on port 8080 and connect to MPD at host 'mpdhost' (default port 6600)
+docker run --rm --init -p 8800:8080 ympd -h <mpdhost> 
+```
+
+Replace `<mpdhost>` with the address of your MPD server. You can pass any ympd flags after the image name.
+
+#### Example with custom MPD host and port:
+```sh
+docker run --rm --init -p 8080:8080 ympd -h 192.168.1.100 -p 6600 -w 8080
+```
+
 ## Copyright
 
-2013-2014 <andy@ndyk.de>
+2025-2026 <git@bozakov.de>

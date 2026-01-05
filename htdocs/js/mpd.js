@@ -97,14 +97,18 @@ var app = $.sammy(function () {
         if (wss_auth_token !== '')
             socket.send('MPD_API_GET_QUEUE,' + pagination);
 
-        $('#panel-heading').text('Queue');
         $('#panel-heading-info').empty();
 
-        $('#queue').addClass('active');
+        $('.queue-only').show();
+        
+        // Sync tab state
+        $('#tab-queue').addClass('active');
+        $('#tab-browse').removeClass('active');
     }
 
     function prepare() {
         $('.nav button').removeClass('active');
+        $('.tab-btn').removeClass('active');
         $('.page-btn').addClass('hide');
         $('#add-all-songs').hide();
         pagination = 0;
@@ -122,6 +126,7 @@ var app = $.sammy(function () {
         browsepath = this.params['splat'][1];
         pagination = parseInt(this.params['splat'][0]);
         current_app = 'browse';
+        $('.queue-only').hide();
         $('#breadcrump')
             .removeClass('hide')
             .empty()
@@ -147,7 +152,6 @@ var app = $.sammy(function () {
             });
         }
 
-        $('#panel-heading').text('Browse database');
         $('#panel-heading-info').empty();
         var path_array = browsepath.split('/');
         var full_path = '';
@@ -169,7 +173,10 @@ var app = $.sammy(function () {
             );
             full_path += '/';
         });
-        $('#browse').addClass('active');
+        
+        // Sync tab state
+        $('#tab-browse').addClass('active');
+        $('#tab-queue').removeClass('active');
     });
 
     this.get(/\#\/search\/(.*)/, function () {
@@ -179,8 +186,6 @@ var app = $.sammy(function () {
 
         $('#search > div > input').val(searchstr);
         socket.send('MPD_API_SEARCH,' + searchstr);
-
-        $('#panel-heading').text('Search: ' + searchstr);
     });
 
     this.get('/', function (context) {
@@ -742,13 +747,6 @@ function webSocketConnect() {
                                 case 'dir':
                                     pagination = 0;
                                     browsepath = $(this).attr('uri');
-                                    $('#browse > a').attr(
-                                        'href',
-                                        '#/browse/' +
-                                        pagination +
-                                        '/' +
-                                        browsepath
-                                    );
                                     $('#filter > a').attr(
                                         'href',
                                         '#/browse/' +
@@ -814,10 +812,6 @@ function webSocketConnect() {
                         click: function () {
                             pagination = 0;
                             browsepath = $(this).attr('uri');
-                            $('#browse > a').attr(
-                                'href',
-                                '#/browse/' + pagination + '/' + browsepath
-                            );
                             $('#filter > a').attr(
                                 'href',
                                 '#/browse/' + pagination + '/' + browsepath
@@ -1566,14 +1560,6 @@ function add_filter() {
 
 // Modern UI navigation handler
 $(document).ready(function () {
-    // Handle navigation button clicks
-    $('.nav button[data-href]').on('click', function () {
-        var href = $(this).data('href');
-        if (href) {
-            window.location.hash = href;
-        }
-    });
-
     // Update toggle button states
     function updateToggleButton(btn, isActive, text) {
         if (isActive) {
@@ -1594,5 +1580,153 @@ $(document).ready(function () {
     $('#trashmode button').on('click', function () {
         $('#trashmode button').removeClass('active');
         $(this).addClass('active');
+    });
+    
+    // Tab navigation
+    $('.tab-btn').on('click', function(e) {
+        e.preventDefault();
+        var href = $(this).data('href');
+        
+        if (!href) return; // Skip shortcuts button
+        
+        // Update active state
+        $('.tab-btn').removeClass('active');
+        $(this).addClass('active');
+        
+        // Navigate
+        window.location.hash = href;
+    });
+    
+    // Keyboard shortcuts help
+    $('#shortcuts-hint').on('click', function(e) {
+        e.preventDefault();
+        var shortcuts = `
+<div class="shortcuts-modal">
+    <h4 style="margin-top:0; margin-bottom: 20px; color: var(--accent-bright);">
+        <i class="bi bi-keyboard"></i> Keyboard Shortcuts
+    </h4>
+    <div style="display: grid; gap: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Play / Pause</span>
+            <kbd>Space</kbd>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Next Track</span>
+            <kbd>Ctrl</kbd> + <kbd>→</kbd>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Previous Track</span>
+            <kbd>Ctrl</kbd> + <kbd>←</kbd>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Volume Up</span>
+            <kbd>Ctrl</kbd> + <kbd>↑</kbd>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Volume Down</span>
+            <kbd>Ctrl</kbd> + <kbd>↓</kbd>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Switch to Queue</span>
+            <kbd>Ctrl</kbd> + <kbd>Q</kbd>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Switch to Browse</span>
+            <kbd>Ctrl</kbd> + <kbd>B</kbd>
+        </div>
+    </div>
+</div>
+<style>
+kbd {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--text-primary);
+    background: rgba(var(--base-text-opacity), 0.08);
+    border: 1px solid rgba(var(--base-text-opacity), 0.15);
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    font-family: ui-monospace, monospace;
+}
+.shortcuts-modal {
+    padding: 8px;
+}
+</style>
+        `;
+        $('.top-right').notify({
+            message: { html: shortcuts },
+            type: 'info',
+            delay: 0  // Don't auto-dismiss
+        });
+    });
+    
+    // Search improvements - clear button
+    var $searchInput = $('.search-input');
+    var $searchClear = $('.search-clear');
+    
+    $searchInput.on('input', function() {
+        if ($(this).val().length > 0) {
+            $searchClear.show();
+        } else {
+            $searchClear.hide();
+        }
+    });
+    
+    $searchClear.on('click', function() {
+        $searchInput.val('').trigger('input').focus();
+        $(this).hide();
+    });
+    
+    // Keyboard shortcuts
+    $(document).on('keydown', function(e) {
+        // Don't trigger shortcuts when typing in input fields
+        if ($(e.target).is('input, textarea')) return;
+        
+        switch(e.key) {
+            case ' ': // Space - play/pause
+                e.preventDefault();
+                clickPlay();
+                break;
+            case 'ArrowRight': // Next track
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    socket.send('MPD_API_SET_NEXT');
+                }
+                break;
+            case 'ArrowLeft': // Previous track
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    socket.send('MPD_API_SET_PREV');
+                }
+                break;
+            case 'q': // Switch to Queue
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    window.location.hash = '#/';
+                }
+                break;
+            case 'b': // Switch to Browse
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    window.location.hash = '#/browse/0/';
+                }
+                break;
+            case 'ArrowUp': // Volume up
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    var vol = parseInt($('#volumeslider').val());
+                    $('#volumeslider').val(Math.min(100, vol + 5)).trigger('change');
+                }
+                break;
+            case 'ArrowDown': // Volume down
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    var vol = parseInt($('#volumeslider').val());
+                    $('#volumeslider').val(Math.max(0, vol - 5)).trigger('change');
+                }
+                break;
+        }
     });
 });

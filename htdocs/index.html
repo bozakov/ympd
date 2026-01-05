@@ -55,13 +55,8 @@
           </div>
         </div>
 
-        <div class="switch volume-switch">
-          <div class="label">
-            <i id="volume-icon" class="bi bi-volume-up-fill"></i>
-            <span>Volume</span>
-          </div>
-        </div>
         <div class="volume-slider-container">
+          <i id="volume-icon" class="bi bi-volume-up-fill"></i>
           <input type="range" id="volumeslider" min="0" max="100" value="0" />
           <span id="volume-number" class="volume-value"></span>
         </div>
@@ -69,12 +64,6 @@
         <div class="sep"></div>
 
         <nav class="nav" aria-label="Main">
-          <button id="queue" class="active" data-href="#/">
-            <i class="bi bi-music-note-list"></i> Queue
-          </button>
-          <button id="browse" data-href="#/browse/0/">
-            <i class="bi bi-folder2-open"></i> Browse
-          </button>
           <button data-bs-toggle="modal" data-bs-target="#addstream">
             <i class="bi bi-plus-lg"></i> Add Stream
           </button>
@@ -132,7 +121,7 @@
             title="Trash mode: Up"
             aria-label="Trash mode up"
           >
-            <i class="bi bi-chevron-compact-up"></i>
+            <i class="bi bi-arrow-bar-up"></i>
             <span class="visually-hidden">Up</span>
           </button>
           <button
@@ -152,11 +141,15 @@
             title="Trash mode: Down"
             aria-label="Trash mode down"
           >
-            <i class="bi bi-chevron-compact-down"></i>
+            <i class="bi bi-arrow-bar-down"></i>
             <span class="visually-hidden">Down</span>
           </button>
           </div>
         </div>
+        
+        <button id="shortcuts-hint" class="sidebar-action-btn" title="Keyboard Shortcuts">
+          <i class="bi bi-keyboard"></i> Shortcuts
+        </button>
       </aside>
 
       <!-- Main content -->
@@ -170,7 +163,7 @@
           </div>
           <div class="meta">
             <h2>
-              <span id="currenttrack">No track playing</span>
+              <span id="currenttrack"></span> <!-- No track playing -->
             </h2>
             <p>
               <span id="artist"></span>
@@ -213,19 +206,32 @@
 
         <!-- Queue Section -->
         <section class="queue" aria-label="Queue">
+          <!-- Tab Navigation -->
+          <div class="view-tabs" role="tablist">
+            <button id="tab-queue" class="tab-btn active" data-href="#/" title="Queue (Ctrl+Q)" role="tab" aria-selected="true">
+              <span>Queue</span>
+            </button>
+            <button id="tab-browse" class="tab-btn" data-href="#/browse/0/" title="Browse (Ctrl+B)" role="tab" aria-selected="false">
+              <span>Browse</span>
+            </button>
+          </div>
+          
           <h3>
-            <span id="panel-heading">Queue</span>
+            <span id="panel-heading" style="display: none;">Queue</span>
+            <ol id="breadcrump" class="breadcrumb hide"></ol>
             <span class="queue-info">
               <span id="panel-heading-info"></span>
             </span>
           </h3>
-
-          <ol id="breadcrump" class="breadcrumb hide"></ol>
           <div class="col-md-12" id="filter"></div>
 
           <div id="search-wrapper" class="search-wrapper">
             <form id="search" role="search">
-              <input type="text" class="search-input" placeholder="Search..." />
+              <i class="bi bi-search search-icon"></i>
+              <input type="text" class="search-input" placeholder="Search tracks, artists, albums..." />
+              <button type="button" class="search-clear" title="Clear search" style="display:none;">
+                <i class="bi bi-x-circle-fill"></i>
+              </button>
             </form>
           </div>
 
@@ -251,7 +257,7 @@
             <li id="next" class="page-btn hide"><a href="">Next</a></li>
           </ul>
 
-          <div class="footer-actions">
+          <div class="footer-actions queue-only">
             <button class="ghost" onclick="socket.send('MPD_API_RM_ALL');">
               <i class="bi bi-trash-fill"></i> Clear Queue
             </button>

@@ -1458,26 +1458,6 @@ function songNotify(title, artist, album) {
     );
 }
 
-$(document).keydown(function (e) {
-    if (e.target.tagName == 'INPUT') {
-        return;
-    }
-    switch (e.which) {
-        case 37: //left
-            socket.send('MPD_API_SET_PREV');
-            break;
-        case 39: //right
-            socket.send('MPD_API_SET_NEXT');
-            break;
-        case 32: //space
-            clickPlay();
-            break;
-        default:
-            return;
-    }
-    e.preventDefault();
-});
-
 function set_filter(c) {
     filter = c;
     $('#filter > a').removeClass('active');
@@ -1587,7 +1567,7 @@ $(document).ready(function () {
         e.preventDefault();
         var href = $(this).data('href');
         
-        if (!href) return; // Skip shortcuts button
+        
         
         // Update active state
         $('.tab-btn').removeClass('active');
@@ -1597,70 +1577,7 @@ $(document).ready(function () {
         window.location.hash = href;
     });
     
-    // Keyboard shortcuts help
-    $('#shortcuts-hint').on('click', function(e) {
-        e.preventDefault();
-        var shortcuts = `
-<div class="shortcuts-modal">
-    <h4 style="margin-top:0; margin-bottom: 20px; color: var(--accent-bright);">
-        <i class="bi bi-keyboard"></i> Keyboard Shortcuts
-    </h4>
-    <div style="display: grid; gap: 12px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span>Play / Pause</span>
-            <kbd>Space</kbd>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span>Next Track</span>
-            <kbd>Ctrl</kbd> + <kbd>→</kbd>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span>Previous Track</span>
-            <kbd>Ctrl</kbd> + <kbd>←</kbd>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span>Volume Up</span>
-            <kbd>Ctrl</kbd> + <kbd>↑</kbd>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span>Volume Down</span>
-            <kbd>Ctrl</kbd> + <kbd>↓</kbd>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span>Switch to Queue</span>
-            <kbd>Ctrl</kbd> + <kbd>Q</kbd>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span>Switch to Browse</span>
-            <kbd>Ctrl</kbd> + <kbd>B</kbd>
-        </div>
-    </div>
-</div>
-<style>
-kbd {
-    display: inline-block;
-    padding: 4px 8px;
-    font-size: 11px;
-    font-weight: 600;
-    line-height: 1;
-    color: var(--text-primary);
-    background: rgba(var(--base-text-opacity), 0.08);
-    border: 1px solid rgba(var(--base-text-opacity), 0.15);
-    border-radius: 4px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    font-family: ui-monospace, monospace;
-}
-.shortcuts-modal {
-    padding: 8px;
-}
-</style>
-        `;
-        $('.top-right').notify({
-            message: { html: shortcuts },
-            type: 'info',
-            delay: 0  // Don't auto-dismiss
-        });
-    });
+    // Keyboard shortcuts panel removed (button and panel deleted)
     
     // Search improvements - clear button
     var $searchInput = $('.search-input');

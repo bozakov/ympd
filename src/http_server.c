@@ -55,6 +55,11 @@ int callback_http(struct mg_connection *c) {
         return MG_TRUE;
     }
 
+    // Let WebSocket upgrade requests pass through to mongoose
+    if (!strcmp(c->uri, "/ws")) {
+        return MG_FALSE;
+    }
+
     mg_send_status(c, 404);
     mg_printf_data(c, "Not Found");
     return MG_TRUE;

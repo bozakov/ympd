@@ -45,6 +45,12 @@ static int server_callback(struct mg_connection *c, enum mg_event ev) {
         case MG_CLOSE:
             mpd_close_handler(c);
             return MG_TRUE;
+        case MG_WS_HANDSHAKE:
+            // Return MG_FALSE to let mongoose handle the WebSocket upgrade
+            return MG_FALSE;
+        case MG_WS_CONNECT:
+            // WebSocket connection established
+            return MG_TRUE;
         case MG_REQUEST:
             if (c->is_websocket) {
                 c->content[c->content_len] = '\0';

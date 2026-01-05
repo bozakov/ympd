@@ -331,17 +331,21 @@ function webSocketAuthenticate() {
 }
 
 function webSocketConnect() {
-    console.log('Connecting to WebSocket...');
+    var ws_url = get_appropriate_ws_url();
+    console.log('Connecting to WebSocket...', ws_url);
 
     try {
         if (typeof MozWebSocket != 'undefined') {
-            socket = new MozWebSocket(get_appropriate_ws_url());
+            socket = new MozWebSocket(ws_url);
         } else {
-            socket = new WebSocket(get_appropriate_ws_url());
+            socket = new WebSocket(ws_url);
+            console.debug('Created WebSocket.');
         }
 
         socket.onopen = function () {
             reconnect_attempts = 0;
+            console.debug('opened WebSocket.');
+
             console.log('connected');
             $('.top-right')
                 .notify({
@@ -357,7 +361,9 @@ function webSocketConnect() {
         };
 
         socket.onerror = function (error) {
-            console.log('WebSocket Error:', error);
+            console.error('WebSocket Error:', error);
+            console.error('WebSocket readyState:', socket.readyState);
+            console.error('WebSocket URL:', socket.url);
         };
 
         socket.onmessage = function got_packet(msg) {
@@ -1044,7 +1050,7 @@ function webSocketConnect() {
         };
 
         socket.onclose = function (event) {
-            console.log('disconnected (code: ' + event.code + ')');
+            console.log('WebSocket closed (code: ' + event.code + ', reason: ' + event.reason + ', wasClean: ' + event.wasClean + ')');
             wss_auth_token = '';
 
             if (reconnect_attempts < 1) {

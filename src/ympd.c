@@ -37,7 +37,7 @@ void bye() {
     force_exit = 1;
 }
 
-static int server_callback(struct mg_connection *c, enum mg_event ev) {
+static int server_callback(struct mg_connection *c, int ev) {
     int result = MG_FALSE;
     FILE *fp = NULL;
 
@@ -77,6 +77,8 @@ static int server_callback(struct mg_connection *c, enum mg_event ev) {
 
 int main(int argc, char **argv) {
     int n, option_index = 0;
+    /* Reduce Mongoose logging to errors only to avoid verbose connection traces */
+    mg_log_set(MG_LL_ERROR);
     struct mg_server *server = mg_create_server(NULL, server_callback);
     unsigned int current_timer = 0, last_timer = 0;
     char *run_as_user = NULL;

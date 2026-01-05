@@ -30,7 +30,7 @@
 #include "json_encode.h"
 
 /* forward declaration */
-static int mpd_notify_callback(struct mg_connection *c, enum mg_event ev);
+static int mpd_notify_callback(struct mg_connection *c, int ev);
 struct t_mpd mpd;
 
 const char *mpd_cmd_strs[] = {MPD_CMDS(GEN_STR)};
@@ -66,7 +66,6 @@ int callback_mpd(struct mg_connection *c) {
     if (!s->authorized && (cmd_id != MPD_API_AUTHORIZE)) {
         n = snprintf(mpd.buf, MAX_SIZE, "{\"type\":\"error\",\"data\":\"not authorized\"}");
         mg_websocket_write(c, 1, mpd.buf, n);
-
         return MG_TRUE;
     }
 
@@ -75,8 +74,14 @@ int callback_mpd(struct mg_connection *c) {
 
     if (mpd.conn_state != MPD_CONNECTED && cmd_id != MPD_API_SET_MPDHOST &&
         cmd_id != MPD_API_GET_MPDHOST && cmd_id != MPD_API_SET_MPDPASS &&
-        cmd_id != MPD_API_AUTHORIZE)
+        cmd_id != MPD_API_AUTHORIZE) {
+        if (c->content) {
+            free(c->content);
+            c->content = NULL;
+            c->content_len = 0;
+        }
         return MG_TRUE;
+    }
 
     switch (cmd_id) {
         case MPD_API_AUTHORIZE:
@@ -91,8 +96,18 @@ int callback_mpd(struct mg_connection *c) {
             p_charbuf = strdup(c->content);
             free(s->auth_token);
             s->auth_token = strdup(get_arg1(p_charbuf));
-            if (!strcmp(mpd.wss_auth_token, s->auth_token))
-                s->authorized = 1;
+            /* Debug: log both tokens, handle NULL */
+            if (mpd.wss_auth_token && s->auth_token) {
+                fprintf(stderr, "[ympd] AUTH: expected=[%s] received=[%s] len(exp)=%zu len(rec)=%zu\n", mpd.wss_auth_token, s->auth_token, strlen(mpd.wss_auth_token), strlen(s->auth_token));
+                /* Compare using strncmp for exact length */
+                if (strlen(mpd.wss_auth_token) == strlen(s->auth_token) &&
+                    strncmp(mpd.wss_auth_token, s->auth_token, strlen(mpd.wss_auth_token)) == 0)
+                    s->authorized = 1;
+            } else {
+                fprintf(stderr, "[ympd] AUTH: NULL token(s): expected=[%s] received=[%s]\n",
+                        mpd.wss_auth_token ? mpd.wss_auth_token : "(null)",
+                        s->auth_token ? s->auth_token : "(null)");
+            }
 
             n = snprintf(mpd.buf, MAX_SIZE, "{\"type\":\"authorized\", \"data\":\"%s\"}",
                          s->authorized ? "true" : "false");
@@ -375,7 +390,7 @@ int mpd_close_handler(struct mg_connection *c) {
     return 0;
 }
 
-static int mpd_notify_callback(struct mg_connection *c, enum mg_event ev) {
+static int mpd_notify_callback(struct mg_connection *c, int ev) {
     size_t n;
 
     if (!c->is_websocket)

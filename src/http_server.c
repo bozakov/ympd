@@ -40,18 +40,21 @@ int callback_http(struct mg_connection *c) {
 
     if (!strcmp(c->uri, "/wss-auth")) {
         if (!mpd.wss_auth_token) {
-            unsigned char salt[WSS_AUTH_TOKEN_SIZE + 1];
-
-            RAND_bytes(salt, WSS_AUTH_TOKEN_SIZE);
-            for (int i = 0; i <= WSS_AUTH_TOKEN_SIZE; i++)
-                salt[i] = salt[i] % 26 + 65;
-            salt[WSS_AUTH_TOKEN_SIZE] = 0;
-            mpd.wss_auth_token = strdup((char *)salt);
+            char salt[WSS_AUTH_TOKEN_SIZE + 1];
+            for (int i = 0; i < WSS_AUTH_TOKEN_SIZE; i++) {
+                int r = rand() % 26;
+                salt[i] = 'A' + r;
+            }
+            salt[WSS_AUTH_TOKEN_SIZE] = '\0';
+            mpd.wss_auth_token = strdup(salt);
+            /* Debug: print token as hex */
+            fprintf(stderr, "[ympd] Generated token: ");
+            for (int i = 0; i < WSS_AUTH_TOKEN_SIZE; i++) fprintf(stderr, "%02X ", (unsigned char)mpd.wss_auth_token[i]);
+            fprintf(stderr, "\n");
         }
-
         mg_send_header(c, "Content-Type", "text/plain");
+        /* Always send exactly 50 bytes, no NUL terminator */
         mg_send_data(c, mpd.wss_auth_token, WSS_AUTH_TOKEN_SIZE);
-
         return MG_TRUE;
     }
 

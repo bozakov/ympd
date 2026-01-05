@@ -50,6 +50,7 @@ set(SOURCES
     src/ympd.c
     src/mpd_client.c
     src/mongoose.c
+    src/mongoose_compat.c
     src/json_encode.c
 )
 

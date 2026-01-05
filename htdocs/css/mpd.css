@@ -1,42 +1,42 @@
 /* ============================================
-   MODERN COLOR SCHEME - Easy to customize!
-   Update these 5 colors to change the entire theme
+   MODERN COLOR SCHEME - Refactored & Clean
    ============================================ */
 
 :root {
-  /* Material You Color Palette - Dynamic and Modern */
-  --color-1: #d32f2f;
-  --color-2: #0288d1;
-  --color-3: #ffffff;
-  --color-4: #1976d2;
-  --color-5: #0d47a1;
+  /* 1. PALETTE LAYER - Raw Colors */
+  --color-danger: #d32f2f;
+  --color-info: #0288d1;
+  --color-white: #ffffff;
+  --color-primary: #1976d2;
+  --color-primary-dark: #0d47a1;
+  --color-success: #10b981; /* Added for notifications */
+  --color-warning: #f59e0b; /* Added for notifications */
   
-  /* Base Theme Colors - Material Design 3 inspired */
+  /* 2. THEME LAYER - Base Surfaces */
   --base-bg: #f8f9fa;
   --base-surface: #ffffff;
   --base-gradient-start: #fafbfc;
   --base-gradient-end: #f0f2f5;
   --base-text: #1c1b1f;
-  --base-text-opacity: 28, 27, 31; /* RGB values for rgba */
+  --base-text-opacity: 28, 27, 31; /* RGB Comma-separated for rgba() usage */
   
-  /* UI Opacity Values - Material Design 3 */
+  /* 3. DESIGN TOKENS - Opacity & Effects */
   --glass-opacity: 0.05;
   --glass-hover-opacity: 0.08;
   --border-opacity: 0.08;
   --shadow-color: 0, 0, 0;
   --shadow-opacity: 0.08;
   
-  /* Glassmorphism */
+  /* Glassmorphism Configuration */
   --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.3);
   --blur-strength: 12px;
   
   /* ============================================
-     Derived Theme Variables (auto-generated from above)
-     No need to edit these unless you want fine control
+     DERIVED VARIABLES (Auto-calculated)
      ============================================ */
   
-  /* Backgrounds */
+  /* Background Aliases */
   --bg: var(--base-bg);
   --surface: var(--base-surface);
   --bg-gradient-start: var(--base-gradient-start);
@@ -47,41 +47,44 @@
   --text-secondary: rgba(var(--base-text-opacity), 0.65);
   --muted: rgba(var(--base-text-opacity), 0.45);
   
-  /* Interactive Elements - Using palette colors */
-  /* Semantic accent roles (map palette -> roles used across the UI) */
-  --accent-primary: var(--color-4);
-  --accent-secondary: var(--color-2);
-  --accent-danger: var(--color-1);
-  --accent-surface: var(--color-3);
-  --accent-strong: var(--color-5);
+  /* Semantic Accents */
+  --accent-primary: var(--color-primary);
+  --accent-secondary: var(--color-info);
+  --accent-danger: var(--color-danger);
+  --accent-surface: var(--color-white);
+  --accent-strong: var(--color-primary-dark);
   --accent-on-primary: #ffffff;
 
-  /* Interactive Elements - Using semantic accents */
+  /* Interactive Links */
   --accent: var(--accent-primary);
   --accent-bright: var(--accent-primary);
   --accent-gradient-start: var(--accent-surface);
   --accent-gradient-end: var(--accent-primary);
   
-  /* Hover states - derived from accent colors */
+  /* Hover State Logic (using color-mix for modern browsers) */
   --hover-bg: color-mix(in srgb, var(--accent-primary) 15%, transparent);
   --active-bg: color-mix(in srgb, var(--accent-primary) 20%, transparent);
   --active-hover-bg: color-mix(in srgb, var(--accent-primary) 25%, transparent);
   
-  /* UI Elements */
+  /* Component Variables */
   --glass: rgba(var(--shadow-color), var(--glass-opacity));
   --glass-hover: rgba(var(--shadow-color), var(--glass-hover-opacity));
   --border-subtle: rgba(var(--shadow-color), var(--border-opacity));
   --card-shadow: 0 2px 12px rgba(var(--shadow-color), var(--shadow-opacity));
   
-  /* Design System */
+  /* Spacing & Radius */
   --radius: 12px;
   color-scheme: light;
 
-  /* Bootstrap 5 font vars (keep all components consistent) */
+  /* Typography (Bootstrap Compatible) */
   --bs-font-sans-serif: Inter, ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --bs-body-font-family: var(--bs-font-sans-serif);
 }
+
+/* ============================================
+   GLOBAL RESETS & SCROLLBARS
+   ============================================ */
 
 * {
   box-sizing: border-box;
@@ -95,18 +98,16 @@ html,
 body {
   min-height: 100%;
   margin: 0;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--bs-body-font-family);
   color: var(--text-primary);
 }
 
 body {
-  font-family: var(--bs-body-font-family);
   background: linear-gradient(135deg, #e8eef5 0%, #f0f4f9 50%, #e1e8f0 100%) fixed;
   min-height: 100vh;
 }
 
-/* Custom Scrollbar - Material You */
+/* Webkit Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -126,13 +127,16 @@ body {
   background: rgba(var(--base-text-opacity), 0.25);
 }
 
-/* Firefox scrollbar */
+/* Firefox Scrollbar */
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(var(--base-text-opacity), 0.15) transparent;
 }
 
-/* App Grid Layout - Material You */
+/* ============================================
+   LAYOUT ARCHITECTURE
+   ============================================ */
+
 .app {
   max-width: 1400px;
   margin: 0 auto;
@@ -144,9 +148,14 @@ body {
   align-items: start;
   min-height: 100vh;
   position: relative;
+  /* Fade-in effect */
+  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Sidebar - Material You Elevated Surface */
+/* ============================================
+   SIDEBAR COMPONENT
+   ============================================ */
+
 .sidebar {
   grid-area: sidebar;
   background: var(--surface);
@@ -204,6 +213,7 @@ body {
   font-weight: 400;
 }
 
+/* Navigation Links */
 .nav {
   display: flex;
   flex-direction: column;
@@ -274,7 +284,6 @@ body {
   margin: 12px 0;
 }
 
-/* Section header for sidebar groups */
 .section-header {
   font-size: 11px;
   font-weight: 700;
@@ -284,7 +293,7 @@ body {
   margin: 16px 0 8px 4px;
 }
 
-/* Controls list in sidebar - Card Style */
+/* Controls List (Switches) */
 .controls-list {
   display: flex;
   flex-direction: column;
@@ -372,7 +381,33 @@ body {
   border-color: color-mix(in srgb, var(--accent-bright) 85%, black);
 }
 
-/* Main area - Fixed Player + Scrollable Content */
+/* Sidebar Utilities */
+.sidebar-action-btn {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: rgba(var(--base-text-opacity), 0.04);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.sidebar-action-btn:hover {
+  background: rgba(var(--base-text-opacity), 0.08);
+  color: var(--text-primary);
+}
+
+/* ============================================
+   MAIN CONTENT AREA
+   ============================================ */
+
 .main {
   grid-area: main;
   display: flex;
@@ -383,7 +418,7 @@ body {
   padding: 0;
 }
 
-/* Now Playing Section - Floating with Glassmorphism */
+/* Now Playing Card */
 .now-playing {
   display: flex;
   gap: 24px;
@@ -458,6 +493,7 @@ body {
   font-size: 14px;
 }
 
+/* Player Controls */
 .player {
   display: flex;
   flex-direction: column;
@@ -561,7 +597,7 @@ body {
   transform: scale(1.0);
 }
 
-/* Progress - Material You Active Indicator */
+/* Progress & Seek Bars */
 .progress-section {
   display: flex;
   align-items: center;
@@ -624,7 +660,10 @@ body {
   align-items: center;
 }
 
-/* Queue Section - Scrollable Content */
+/* ============================================
+   QUEUE & CONTENT LIST
+   ============================================ */
+
 .queue {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(12px);
@@ -655,7 +694,14 @@ body {
   flex-wrap: wrap;
 }
 
-/* Breadcrumb styling - subtle and inline */
+.queue-info {
+  margin-left: auto;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Breadcrumb Styling */
 .breadcrumb {
   display: inline-flex;
   align-items: baseline;
@@ -666,6 +712,18 @@ body {
   font-size: 13px;
   font-weight: 400;
   color: var(--text-secondary);
+}
+
+/* Specific styling for the 'chip' style breadcrumb used in search */
+.search-wrapper + .breadcrumb {
+  background: rgba(var(--base-text-opacity), 0.05);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin: 0 0 16px 0;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .breadcrumb.hide {
@@ -695,6 +753,18 @@ body {
   padding: 0;
 }
 
+/* Contextual breadcrumb links (chips) */
+.search-wrapper + .breadcrumb li a {
+  color: var(--accent-bright);
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-wrapper + .breadcrumb li a:hover {
+  background: rgba(25, 118, 210, 0.12);
+}
+
 .breadcrumb li a:hover {
   color: var(--accent-bright);
 }
@@ -704,25 +774,17 @@ body {
   font-weight: 500;
 }
 
-.queue-info {
-  margin-left: auto;
-}
-
-.queue-info {
-  color: var(--muted);
-  font-weight: 600;
-  font-size: 14px;
-}
-
-/* Tab Navigation - Native Segmented Control Style */
+/* View Tabs - Native Segmented Control Style */
 .view-tabs {
   display: inline-flex;
-  margin-bottom: 24px;
-  padding: 2px;
-  background: rgba(var(--base-text-opacity), 0.06);
-  border-radius: 8px;
-  border: 1px solid rgba(var(--base-text-opacity), 0.08);
   position: relative;
+  padding: 4px;
+  margin-bottom: 24px;
+  background: rgba(118, 118, 128, 0.12); /* Native iOS/Mac track color */
+  border-radius: 99px;
+  border: none;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+  gap: 0;
   max-width: 100%;
 }
 
@@ -730,89 +792,71 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 20px;
+  padding: 8px 24px;
   border: none;
   background: transparent;
   color: var(--text-secondary);
   font-size: 13px;
   font-weight: 500;
-  border-radius: 6px;
+  border-radius: 99px;
   cursor: pointer;
-  transition: all 0.15s ease-out;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
   position: relative;
   z-index: 1;
-  min-width: 80px;
+  min-width: 90px;
+  outline: none;
 }
 
 .tab-btn:hover:not(.active) {
   color: var(--text-primary);
-  background: rgba(var(--base-text-opacity), 0.04);
+  background: rgba(255, 255, 255, 0.3);
 }
 
-.tab-btn.active {
-  background: var(--base-surface);
-  color: var(--accent-bright);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08),
-              0 0 0 0.5px rgba(var(--base-text-opacity), 0.04);
-  font-weight: 600;
-}
-
-/* Sidebar shortcuts button */
-.sidebar-action-btn {
-  width: 100%;
-  padding: 12px 16px;
-  border: none;
-  background: rgba(var(--base-text-opacity), 0.04);
-  color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: 8px;
-  margin-top: 12px;
-}
-
-.sidebar-action-btn:hover {
-  background: rgba(var(--base-text-opacity), 0.08);
+.tab-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.4);
   color: var(--text-primary);
 }
 
-.sidebar-action-btn i {
-  font-size: 16px;
+.tab-btn.active {
+  background: var(--surface);
+  color: var(--text-primary);
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12), 
+              0 3px 1px rgba(0, 0, 0, 0.04);
 }
 
-/* Responsive tabs for mobile and small screens */
+/* Tab Responsive Rules */
 @media (max-width: 1024px) {
   .view-tabs {
     width: auto;
-    max-width: 280px;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   
   .tab-btn {
     padding: 8px 16px;
-    min-width: 70px;
-    font-size: 12px;
+    min-width: auto;
+    flex: 1;
   }
 }
 
 @media (max-width: 768px) {
   .view-tabs {
+    display: flex;
     width: 100%;
-    max-width: 100%;
+    border-radius: 16px;
   }
   
   .tab-btn {
     flex: 1;
-    min-height: 44px;
-    padding: 10px 12px;
+    min-height: 40px;
+    border-radius: 12px;
   }
 }
 
-/* Filter row styling - Material You */
+/* Filter Row */
 #filter {
   display: flex;
   align-items: center;
@@ -863,81 +907,104 @@ body {
   flex-direction: column;
 }
 
-/* Table Styles - Material You List */
-.table {
+/* ============================================
+   REFACTORED TABLE STYLES
+   High specificity utilized to avoid !important
+   ============================================ */
+
+/* Main Table Reset using parent scoping */
+.app .queue-list-wrapper .table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 2px;
   margin: 0;
-  border: none !important;
+  border: none;
   table-layout: fixed;
+  background-color: transparent;
 }
 
-.table thead {
-  border-bottom: none !important;
-  border: none !important;
+/* Header Styling */
+.app .queue-list-wrapper .table thead {
+  border: none;
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  /* Slightly more opaque to cover content cleanly as it scrolls under */
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  /* A refined hairline separator using inset shadow (better for sticky headers) */
+  box-shadow: inset 0 -1px 0 rgba(var(--base-text-opacity), 0.08);
 }
 
-.table thead tr {
-  border: none !important;
+.app .queue-list-wrapper .table thead tr {
+  border: none;
+  background: transparent;
 }
 
-.table th {
-  padding: 12px 16px;
+.app .queue-list-wrapper .table th {
+  padding: 14px 16px 10px 16px; 
   text-align: left;
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: none;
-  letter-spacing: 0.02em;
-  border: none !important;
-  background: transparent !important;
+  
+  color: var(--muted);
+  font-size: 11px;     /* Smaller, sharper font size */
+  font-weight: 700;    /* Bold weight */
+  text-transform: uppercase; /* Standard for data headers */
+  letter-spacing: 0.08em;    /* Wide tracking for uppercase */
+  
+  border: none;
+  background: transparent;
+  transition: color 0.2s ease;
+  user-select: none; /* Prevents text highlighting while clicking to sort */
+  cursor: pointer;   /* Implies the column can be sorted */
 }
 
-.table th:first-child {
+/* Hover state to indicate interactivity (Sorting) */
+.app .queue-list-wrapper .table th:hover {
+  color: var(--text-primary);
+}
+
+/* Specific Column Widths */
+.app .queue-list-wrapper .table th:first-child {
   width: 50px;
   padding-left: 16px;
 }
 
-.table th:nth-child(5) {
+.app .queue-list-wrapper .table th:nth-child(5) {
   width: 80px;
   text-align: right;
 }
 
-.table th:last-child {
+.app .queue-list-wrapper .table th:last-child {
   width: 40px;
 }
 
-.table tbody {
-  border: none !important;
+/* Body Styling */
+.app .queue-list-wrapper .table tbody {
+  border: none;
 }
 
-.table tbody tr {
-  border: none !important;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+/* Row Styling & Interactions */
+.app .queue-list-wrapper .table tbody tr {
+  border: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  background: transparent !important;
-  padding-left: 0 !important;
-  border-radius: 12px !important;
+  background: transparent;
+  border-radius: 12px;
 }
 
-/* Material You State Layer */
-.table tbody tr > td:first-child {
+/* Material You State Layer - Borders */
+.app .queue-list-wrapper .table tbody tr > td:first-child {
   position: relative;
   border-radius: 12px 0 0 12px;
 }
 
-.table tbody tr > td:last-child {
+.app .queue-list-wrapper .table tbody tr > td:last-child {
   border-radius: 0 12px 12px 0;
 }
 
-.table tbody tr > td:first-child::before {
+/* The Active Indicator Line (Invisible by default) */
+.app .queue-list-wrapper .table tbody tr > td:first-child::before {
   content: '';
   position: absolute;
   left: 0;
@@ -950,50 +1017,68 @@ body {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.table tbody tr:hover {
-  background: rgba(var(--base-text-opacity), 0.05) !important;
+/* Hover State */
+.app .queue-list-wrapper .table tbody tr:hover {
+  background-color: rgba(var(--base-text-opacity), 0.05);
 }
 
-.table tbody tr.active {
-  background: rgba(25, 118, 210, 0.12) !important;
+/* Active/Selected State */
+.app .queue-list-wrapper .table tbody tr.active {
+  background-color: rgba(25, 118, 210, 0.12);
 }
 
-.table tbody tr.active:hover {
-  background: rgba(25, 118, 210, 0.16) !important;
+.app .queue-list-wrapper .table tbody tr.active:hover {
+  background-color: rgba(25, 118, 210, 0.16);
 }
 
-.table tbody tr.active td {
-  color: var(--text-primary) !important;
-  font-weight: 500 !important;
+/* Active Text Colors */
+.app .queue-list-wrapper .table tbody tr.active td {
+  color: var(--text-primary);
+  font-weight: 500;
 }
 
-.table tbody tr.active > td:first-child::before {
+/* Active Indicator Line (Visible) */
+.app .queue-list-wrapper .table tbody tr.active > td:first-child::before {
   background: var(--accent-bright);
   width: 4px;
 }
 
-/* Override Bootstrap's default active styles */
-.table > tbody > tr.active > td {
-  color: var(--text-primary) !important;
+/* Active track pulse effect */
+.app .queue-list-wrapper .table tbody tr.active > td:first-child::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: var(--accent-bright);
+  border-radius: 50%;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-.table-hover > tbody > tr.active:hover > td {
-  color: var(--text-primary) !important;
+/* Override Bootstrap's specific active styles */
+.app .queue-list-wrapper .table > tbody > tr.active > td,
+.app .queue-list-wrapper .table-hover > tbody > tr.active:hover > td {
+  color: var(--text-primary);
+  background-color: transparent;
+  border-color: transparent;
 }
 
-.table td {
+/* Cell Styling */
+.app .queue-list-wrapper .table td {
   padding: 14px 16px;
   color: var(--text-primary);
   font-size: 14px;
   font-weight: 400;
-  border: none !important;
-  border-top: none !important;
-  border-bottom: none !important;
-  background-color: transparent !important;
-  transition: inherit !important;
+  border: none;
+  background-color: transparent;
+  transition: inherit;
+  vertical-align: middle;
 }
 
-.table td:first-child {
+/* Specific Cell Tweaks */
+.app .queue-list-wrapper .table td:first-child {
   color: var(--muted);
   font-weight: 500;
   width: 50px;
@@ -1001,22 +1086,18 @@ body {
   padding-left: 16px;
 }
 
-.table td:nth-child(2) {
+.app .queue-list-wrapper .table td:nth-child(2),
+.app .queue-list-wrapper .table td:nth-child(3) {
   color: var(--text-secondary);
   font-size: 12px;
 }
 
-.table td:nth-child(3) {
-  color: var(--text-secondary);
-  font-size: 12px;
-}
-
-.table td:nth-child(4) {
+.app .queue-list-wrapper .table td:nth-child(4) {
   font-weight: 500;
   min-width: 200px;
 }
 
-.table td:nth-child(5) {
+.app .queue-list-wrapper .table td:nth-child(5) {
   text-align: right;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
@@ -1024,31 +1105,42 @@ body {
   width: 80px;
 }
 
-.table td:last-child {
+.app .queue-list-wrapper .table td:last-child {
   width: 40px;
   text-align: right;
   padding-right: 16px;
 }
 
-/* Fix Bootstrap Icons colors */
-.bi {
-  color: inherit !important;
+/* Bootstrap Icon Fixes within Table */
+.app .queue-list-wrapper .table .bi {
+  color: inherit;
 }
 
-/* Table row action icons */
-.table a,
-.table a:hover,
-.table a:focus {
+/* Link Resets within Table */
+.app .queue-list-wrapper .table a {
   color: var(--muted);
   text-decoration: none;
   transition: color 0.15s ease;
 }
 
-.table tr:hover a {
+.app .queue-list-wrapper .table a:hover,
+.app .queue-list-wrapper .table a:focus {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.app .queue-list-wrapper .table tr:hover a {
   color: var(--text-secondary);
 }
 
-/* Search */
+.app .queue-list-wrapper .table tr:hover a:hover {
+  color: var(--text-primary);
+}
+
+/* ============================================
+   SEARCH & FOOTER
+   ============================================ */
+
 .search-wrapper {
   margin-bottom: 16px;
 }
@@ -1122,37 +1214,6 @@ body {
   color: var(--text-secondary);
 }
 
-/* Breadcrumb - Material You Chips */
-.breadcrumb {
-  background: rgba(var(--base-text-opacity), 0.05);
-  border-radius: 12px;
-  padding: 12px 16px;
-  margin: 0 0 16px 0;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.breadcrumb li {
-  color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.breadcrumb li a {
-  color: var(--accent-bright);
-  text-decoration: none;
-  padding: 4px 8px;
-  border-radius: 8px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.breadcrumb li a:hover {
-  background: rgba(25, 118, 210, 0.12);
-  text-decoration: none;
-}
-
 /* Footer Actions */
 .footer-actions {
   display: flex;
@@ -1208,6 +1269,7 @@ body {
   color: var(--accent-bright);
 }
 
+/* Trash Mode */
 .trash-mode-label {
   margin-top: 12px;
   margin-bottom: 8px;
@@ -1216,7 +1278,6 @@ body {
   font-weight: 600;
 }
 
-/* Trashmode controls - Card Style */
 .trashmode-row {
   display: flex;
   align-items: center;
@@ -1270,7 +1331,10 @@ body {
   outline-offset: 2px;
 }
 
-/* Volume Section in Sidebar */
+/* ============================================
+   VOLUME CONTROLS
+   ============================================ */
+
 .volume-switch {
   margin: 16px 0;
   display: block;
@@ -1319,49 +1383,40 @@ body {
   min-width: 36px;
   text-align: right;
   flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Override bootstrap-slider blue color */
+/* Bootstrap Slider Overrides - Utilizing ID specificity to avoid !important */
 #volumeslider .progress-bar,
 #progressbar .progress-bar {
-  background-color: var(--accent) !important;
-  -webkit-transition: none !important;
-  transition: none !important;
+  background-color: var(--accent);
+  transition: none;
 }
 
 #volumeslider .progress,
 #progressbar .progress {
-  background: var(--glass) !important;
-  border: 1px solid var(--border-subtle) !important;
-  border-radius: 999px !important;
-  height: 4px !important;
-  margin: 0 !important;
+  background: var(--glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  height: 4px;
+  margin: 0;
 }
 
 #volumeslider .btn,
 #progressbar .btn {
-  background: var(--accent) !important;
-  background-color: var(--accent) !important;
-  border: 2px solid white !important;
-  width: 16px !important;
-  height: 16px !important;
-  border-radius: 50% !important;
-  box-shadow: 0 2px 6px rgba(var(--shadow-color), 0.2) !important;
-  padding: 0 !important;
-  margin-left: -8px !important;
-  cursor: pointer !important;
+  background: var(--accent);
+  background-color: var(--accent);
+  border: 2px solid white;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(var(--shadow-color), 0.2);
+  padding: 0;
+  margin-left: -8px;
+  cursor: pointer;
 }
 
-.volume-value {
-  min-width: 32px;
-  text-align: right;
-  font-size: 12px;
-  color: var(--text-secondary);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-/* Native range input styling - Material You */
+/* Native Range Inputs */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
@@ -1379,7 +1434,7 @@ input[type="range"]:hover {
   height: 8px;
 }
 
-/* Webkit browsers (Chrome, Safari, Edge) */
+/* Range Thumb (Webkit) */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -1402,7 +1457,7 @@ input[type="range"]::-webkit-slider-thumb:active {
   transform: scale(1.0);
 }
 
-/* Firefox */
+/* Range Thumb (Firefox) */
 input[type="range"]::-moz-range-thumb {
   width: 20px;
   height: 20px;
@@ -1430,24 +1485,19 @@ input[type="range"]::-moz-range-track {
   height: 6px;
 }
 
-/* Progress bar specific styling */
 #progressbar {
   flex: 1;
   margin: 0 12px;
 }
 
-/* Volume slider in sidebar */
 .volume-slider-container input[type="range"] {
   flex: 1;
 }
 
+/* ============================================
+   NOTIFICATIONS
+   ============================================ */
 
-/* Hide utility */
-.hide {
-  display: none !important;
-}
-
-/* Notifications - Material You Snackbar */
 .notifications {
   position: fixed;
   top: 24px;
@@ -1456,6 +1506,7 @@ input[type="range"]::-moz-range-track {
   max-width: 420px;
   pointer-events: none;
 }
+
 .notifications > div {
   position: relative;
   z-index: 9999;
@@ -1474,6 +1525,7 @@ input[type="range"]::-moz-range-track {
   animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: right center;
 }
+
 @keyframes slideInRight {
   from {
     transform: translateX(120%) scale(0.9);
@@ -1484,28 +1536,35 @@ input[type="range"]::-moz-range-track {
     opacity: 1;
   }
 }
+
+/* Semantic Notification Styling (Using variables instead of hardcoded hex) */
 .notifications > div[data-notify-type="info"] {
-  border-left: 4px solid var(--accent-primary);
-  background: linear-gradient(135deg, rgba(25, 118, 210, 0.15) 0%, rgba(255, 255, 255, 0.95) 100%);
+  border-left: 4px solid var(--color-info);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-info) 15%, white) 0%, rgba(255, 255, 255, 0.95) 100%);
 }
+
 .notifications > div[data-notify-type="success"] {
-  border-left: 4px solid #10b981;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(255, 255, 255, 0.95) 100%);
+  border-left: 4px solid var(--color-success);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-success) 15%, white) 0%, rgba(255, 255, 255, 0.95) 100%);
 }
+
 .notifications > div[data-notify-type="warning"] {
-  border-left: 4px solid #f59e0b;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(255, 255, 255, 0.95) 100%);
+  border-left: 4px solid var(--color-warning);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-warning) 15%, white) 0%, rgba(255, 255, 255, 0.95) 100%);
 }
+
 .notifications > div[data-notify-type="danger"] {
-  border-left: 4px solid var(--accent-danger);
-  background: linear-gradient(135deg, rgba(211, 47, 47, 0.15) 0%, rgba(255, 255, 255, 0.95) 100%);
+  border-left: 4px solid var(--color-danger);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-danger) 15%, white) 0%, rgba(255, 255, 255, 0.95) 100%);
 }
+
 .notifications > div [data-notify="message"] {
   color: var(--text-primary);
   font-size: 14px;
   line-height: 1.6;
   font-weight: 400;
 }
+
 .notifications > div [data-notify="title"] {
   color: var(--text-primary);
   font-size: 16px;
@@ -1513,6 +1572,7 @@ input[type="range"]::-moz-range-track {
   margin-bottom: 6px;
   letter-spacing: -0.01em;
 }
+
 .notifications > div [data-notify="dismiss"] {
   position: absolute;
   top: 14px;
@@ -1532,26 +1592,39 @@ input[type="range"]::-moz-range-track {
   justify-content: center;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .notifications > div [data-notify="dismiss"]:hover {
   color: var(--text-primary);
   background: rgba(var(--base-text-opacity), 0.12);
   transform: scale(1.05);
 }
 
-/* Utility classes */
+/* ============================================
+   UTILITIES & ANIMATIONS
+   ============================================ */
+
+.hide {
+  display: none !important;
+}
+
 .pull-right {
   float: right !important;
 }
+
 .pull-left {
   float: left !important;
 }
+
 .clearfix::after {
   content: "";
   display: table;
   clear: both;
 }
 
-/* Material You Animations & Effects */
+.bi {
+  color: inherit !important;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -1579,26 +1652,10 @@ input[type="range"]::-moz-range-track {
   }
 }
 
-/* Subtle fade-in for page load */
-.app {
-  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
+/* ============================================
+   RESPONSIVE LAYOUTS
+   ============================================ */
 
-/* Active track pulse effect */
-.table tbody tr.active > td:first-child::after {
-  content: '';
-  position: absolute;
-  left: 2px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 6px;
-  background: var(--accent-bright);
-  border-radius: 50%;
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-/* Responsive rules - Material You */
 @media (max-width: 1024px) {
   .app {
     grid-template-columns: 1fr;
@@ -1608,6 +1665,7 @@ input[type="range"]::-moz-range-track {
     padding: 0;
     gap: 0;
   }
+  
   .sidebar {
     order: 2;
     position: static;
@@ -1620,44 +1678,54 @@ input[type="range"]::-moz-range-track {
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.5);
   }
+  
   .main {
     padding-bottom: 0;
   }
+  
   .now-playing {
     margin: 0 16px;
     padding: 16px 20px;
     border-radius: 0 0 24px 24px;
     gap: 16px;
   }
+  
   .now-playing .art {
     width: 80px;
     height: 80px;
     min-width: 80px;
     border-radius: 12px;
   }
+  
   .now-playing .meta {
     flex: 1;
     min-width: 0;
   }
+  
   .now-playing .meta h2 {
     font-size: 16px;
   }
+  
   .now-playing .player {
     gap: 10px;
   }
+  
   .now-playing .controls {
     gap: 8px;
   }
+  
   .play {
     width: 56px;
     height: 56px;
     font-size: 22px;
   }
+  
   .big-btn {
     width: 44px;
     height: 44px;
     font-size: 16px;
   }
+  
   .queue {
     margin: 16px;
     padding: 20px;
@@ -1666,18 +1734,25 @@ input[type="range"]::-moz-range-track {
     border: 1px solid rgba(255, 255, 255, 0.4);
   }
 }
+
+@media (max-width: 768px) {
+}
+
 @media (max-width: 640px) {
-  .table th:nth-child(2),
-  .table th:nth-child(3),
-  .table td:nth-child(2),
-  .table td:nth-child(3) {
+  /* Hiding secondary columns for mobile */
+  .app .queue-list-wrapper .table th:nth-child(2),
+  .app .queue-list-wrapper .table th:nth-child(3),
+  .app .queue-list-wrapper .table td:nth-child(2),
+  .app .queue-list-wrapper .table td:nth-child(3) {
     display: none;
   }
+  
   .now-playing {
     flex-direction: column;
     align-items: center;
     text-align: center;
   }
+  
   .now-playing .art {
     width: 120px;
     height: 120px;
@@ -1685,28 +1760,35 @@ input[type="range"]::-moz-range-track {
     border-radius: 20px;
     margin: 0 auto;
   }
+  
   .now-playing .meta {
     width: 100%;
   }
+  
   .now-playing .meta h2 {
     font-size: 18px;
   }
+  
   .now-playing .controls {
     justify-content: center;
     width: 100%;
   }
+  
   .sidebar {
     margin: 20px 8px 8px 8px;
     padding: 16px;
     border-radius: 24px;
   }
+  
   .queue {
     margin: 12px 8px 8px 8px;
     padding: 16px;
     border-radius: 24px;
   }
 }
+
 @media only screen and (max-width: 600px) {
+  /* NOTE: Rename #salamisandwich in HTML to #playlist-table if possible */
   #salamisandwich td:nth-child(4),
   #salamisandwich th:nth-child(4) {
     white-space: normal;

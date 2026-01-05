@@ -1366,9 +1366,9 @@ body {
 /* Icon-only ghost buttons used in the queue footer */
 .ghost.icon-btn {
   border: none;
-  padding: 8px;
-  width: 40px;
-  height: 40px;
+  padding: 2px;
+  width: 20px;
+  height: 20px;
   border-radius: 10px;
   display: inline-flex;
   align-items: center;

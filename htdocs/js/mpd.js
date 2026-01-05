@@ -24,6 +24,7 @@ var TOKEN = '';
 var socket;
 var last_state;
 var last_outputs;
+var last_queue;
 var current_app;
 var pagination = 0;
 var browsepath = '';
@@ -385,6 +386,9 @@ function webSocketConnect() {
                 case 'queue':
                     if (current_app !== 'queue') break;
 
+                    // Skip re-rendering if queue data hasn't changed to prevent hover flickering
+                    if (JSON.stringify(obj) === JSON.stringify(last_queue)) break;
+
                     if (obj.totalTime > 0) {
                         var hours = Math.floor(obj.totalTime / 3600);
                         var minutes =
@@ -543,6 +547,7 @@ function webSocketConnect() {
                         })
                         .disableSelection();
                     queue_loading = false;
+                    last_queue = obj;
                     break;
                 case 'search':
                     $('#wait').modal('hide');

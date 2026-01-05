@@ -35,6 +35,7 @@ var filter = '';
 var scrobbler = '';
 var wss_auth_token = '';
 var reconnect_attempts = 0;
+var queue_loading = false;
 
 // Minimal notify replacement using Bootstrap alerts.
 // Usage examples:
@@ -94,8 +95,11 @@ var app = $.sammy(function () {
         $('#breadcrump').addClass('hide');
         $('#filter').addClass('hide');
         $('#salamisandwich').removeClass('hide').find('tr:gt(0)').remove();
-        if (wss_auth_token !== '')
+        $('.queue').removeClass('search-mode');
+        if (wss_auth_token !== '') {
+            queue_loading = true;
             socket.send('MPD_API_GET_QUEUE,' + pagination);
+        }
 
         $('#panel-heading-info').empty();
 
@@ -181,6 +185,7 @@ var app = $.sammy(function () {
 
     this.get(/\#\/search\/(.*)/, function () {
         current_app = 'search';
+        $('.queue').addClass('search-mode');
         $('#salamisandwich').find('tr:gt(0)').remove();
         var searchstr = this.params['splat'][0];
 
@@ -388,7 +393,7 @@ function webSocketConnect() {
                             obj.totalTime - hours * 3600 - minutes * 60;
 
                         $('#panel-heading-info').text(
-                            'Total: ' +
+                            'Queue: ' +
                             (hours > 0
                                 ? hours +
                                 '\u2009h ' +
@@ -446,7 +451,7 @@ function webSocketConnect() {
                         ).append(
                             '<a class="pull-right btn-group-hover" href="#/" ' +
                             'onclick="trash($(this).parents(\'tr\'));">' +
-                            '<span class="bi bi-trash-fill"></span></a>'
+                            '<span class="bi bi-trash3-fill"></span></a>'
                         );
                     } else {
                         $('#salamisandwich > tbody > tr').on({
@@ -475,7 +480,7 @@ function webSocketConnect() {
                                             .append(
                                                 '<a class="pull-right btn-group-hover" href="#/" ' +
                                                 'onclick="trash($(this).parents(\'tr\'));">' +
-                                                '<span class="bi bi-trash-fill"></span></a>'
+                                                '<span class="bi bi-trash3-fill"></span></a>'
                                             )
                                             .find('a')
                                             .fadeTo('fast', 1);
@@ -537,10 +542,14 @@ function webSocketConnect() {
                             },
                         })
                         .disableSelection();
+                    queue_loading = false;
                     break;
                 case 'search':
                     $('#wait').modal('hide');
                 case 'browse':
+                    if (current_app !== 'search') {
+                        $('.queue').removeClass('search-mode');
+                    }
                     if (current_app !== 'browse' && current_app !== 'search')
                         break;
 
@@ -883,12 +892,10 @@ function webSocketConnect() {
                         $('#btnrandom').removeClass('active').text('Off');
                     }
 
-                    // If MPD just became available after startup/reconnect, load the queue now.
-                    requestQueue();
-                    // Sends a request to the backend to fetch the current queue
-                    function requestQueue() {
-                        if (wss_auth_token !== '')
-                            socket.send('MPD_API_GET_QUEUE,' + pagination);
+                    // Only request queue when viewing it and not already loading
+                    if (current_app === 'queue' && !queue_loading && wss_auth_token !== '') {
+                        queue_loading = true;
+                        socket.send('MPD_API_GET_QUEUE,' + pagination);
                     }
 
                     if (obj.data.consume) {
@@ -923,7 +930,7 @@ function webSocketConnect() {
                         $.each(obj.data, function (id, name) {
                             var btn = $(
                                 '<div class="switch">'
-                                + '<div class="label"><span class="bi bi-speaker"></span> ' + name + '</div>'
+                                + '<div class="label"><i class="bi bi-speaker"></i> ' + name + '</div>'
                                 + '<button id="btnoutput' + id + '" type="button" class="toggle-btn" onclick="toggleoutput(this, ' + id + ')">Off</button>'
                                 + '</div>'
                             );

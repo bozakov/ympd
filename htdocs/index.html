@@ -12,13 +12,11 @@
 
     <title>ympd</title>
 
-    <!-- Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap"
       rel="stylesheet"
     />
 
-    <!-- Bootstrap 5 CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -26,13 +24,11 @@
       crossorigin="anonymous"
     />
 
-    <!-- Bootstrap Icons -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css"
       rel="stylesheet"
     />
 
-    <!-- Custom styles for this template -->
     <link href="css/mpd.css" rel="stylesheet" />
     <link
       href="assets/favicon.ico"
@@ -43,7 +39,6 @@
   </head>
   <body>
     <div class="app">
-      <!-- Sidebar -->
       <aside class="sidebar">
         <div class="brand">
           <div class="logo">
@@ -58,7 +53,7 @@
         <div class="volume-slider-container">
           <i id="volume-icon" class="bi bi-volume-up-fill"></i>
           <input type="range" id="volumeslider" min="0" max="100" value="0" />
-          <span id="volume-number" class="volume-value">0 %</span>
+          <span id="volume-number" class="volume-value">- %</span>
         </div>
 
         <div id="search-wrapper" class="search-wrapper">
@@ -70,19 +65,6 @@
             </button>
           </form>
         </div>
-
-        <div class="sep"></div>
-
-        <nav class="nav" aria-label="Main">
-          <button data-bs-toggle="modal" data-bs-target="#addstream">
-            <i class="bi bi-plus-lg"></i> Add Stream
-          </button>
-          <button data-bs-toggle="modal" data-bs-target="#settings" onclick="getHost();">
-            <i class="bi bi-gear-fill"></i> Settings
-          </button>
-        </nav>
-
-        <div class="sep"></div>
 
         <div class="controls-list">
           <div class="switch">
@@ -117,60 +99,28 @@
           </div>
         </div>
 
-        <div class="sep"></div>
-
         <div id="btn-outputs-block"></div>
+        
+        <nav class="nav" aria-label="Main">
+          <button data-bs-toggle="modal" data-bs-target="#addstream">
+            <i class="bi bi-plus-lg"></i> Add Stream
+          </button>
+          <button data-bs-toggle="modal" data-bs-target="#settings" onclick="getHost();">
+            <i class="bi bi-gear-fill"></i> Settings
+          </button>
+        </nav>
+        </aside>
 
-        <div class="trashmode-row">
-          <div class="trash-mode-label">Trash Mode</div>
-          <div class="trashmode-buttons" id="trashmode">
-          <button
-            id="btntrashmodeup"
-            type="button"
-            class="ghost trashmode-btn"
-            title="Trash mode: Up"
-            aria-label="Trash mode up"
-          >
-            <i class="bi bi-arrow-bar-up"></i>
-            <span class="visually-hidden">Up</span>
-          </button>
-          <button
-            id="btntrashmodesingle"
-            type="button"
-            class="ghost trashmode-btn active"
-            title="Trash mode: Single"
-            aria-label="Trash mode single"
-          >
-            <i class="bi bi-trash"></i>
-            <span class="visually-hidden">Single</span>
-          </button>
-          <button
-            id="btntrashmodedown"
-            type="button"
-            class="ghost trashmode-btn"
-            title="Trash mode: Down"
-            aria-label="Trash mode down"
-          >
-            <i class="bi bi-arrow-bar-down"></i>
-            <span class="visually-hidden">Down</span>
-          </button>
-          </div>
-        </div>
-      </aside>
-
-      <!-- Main content -->
       <main class="main">
         <div class="notifications top-right"></div>
 
-        <!-- Now Playing -->
         <section class="now-playing" aria-label="Now playing">
           <div class="art" aria-hidden="true">
             <i class="bi bi-music-note-beamed"></i>
           </div>
           <div class="meta">
             <h2>
-              <span id="currenttrack"></span> <!-- No track playing -->
-            </h2>
+              <span id="currenttrack"></span> </h2>
             <p>
               <span id="artist"></span>
               <span id="album"></span>
@@ -206,13 +156,10 @@
             </div>
           </div>
 
-          <!-- Hidden audio player for local playback (if needed by JS) -->
           <audio id="player" preload="none" style="display: none;"></audio>
         </section>
 
-        <!-- Queue Section -->
         <section class="queue" aria-label="Queue">
-          <!-- Tab Navigation -->
           <div class="view-tabs" role="tablist">
             <button id="tab-queue" class="tab-btn active" data-href="#/" title="Queue (Ctrl+Q)" role="tab" aria-selected="true">
               <span>Queue</span>
@@ -225,13 +172,9 @@
           <h3>
             <span id="panel-heading" style="display: none;">Queue</span>
             <ol id="breadcrump" class="breadcrumb hide"></ol>
-            <span class="queue-info">
-              <span id="panel-heading-info"></span>
-            </span>
           </h3>
           <div class="col-md-12" id="filter"></div>
 
-          <!-- Table -->
           <div class="queue-list-wrapper">
             <table id="salamisandwich" class="table">
               <thead>
@@ -254,18 +197,36 @@
           </ul>
 
           <div class="footer-actions queue-only">
-            <button class="ghost" onclick="socket.send('MPD_API_RM_ALL');">
-              <i class="bi bi-trash-fill"></i> Clear Queue
-            </button>
-            <button class="ghost" data-bs-toggle="modal" data-bs-target="#savequeue">
-              <i class="bi bi-save-fill"></i> Save Queue
-            </button>
+            <div class="trash-toggle-group" id="trashmode" role="group" aria-label="Trash Mode Selection">
+              <button id="btntrashmodeup" type="button" class="trash-seg-btn" title="Delete Preceding">
+                <i class="bi bi-arrow-bar-up"></i>
+              </button>
+              
+              <button id="btntrashmodesingle" type="button" class="trash-seg-btn active" title="Delete Selection">
+                <i class="bi bi-trash3-fill"></i>
+              </button>
+              
+              <button id="btntrashmodedown" type="button" class="trash-seg-btn" title="Delete Following">
+                <i class="bi bi-arrow-bar-down"></i>
+              </button>
+            </div>
+
+            <div style="flex:1"></div>
+
+            <div class="footer-right">
+              <span id="panel-heading-info" class="queue-total"></span>
+              <button class="ghost icon-btn" data-bs-toggle="modal" data-bs-target="#savequeue" title="Save Queue">
+                <i class="bi bi-save"></i>
+              </button>
+              <button class="ghost icon-btn" onclick="socket.send('MPD_API_RM_ALL');" title="Clear Queue">
+                <i class="bi bi-trash3"></i>
+              </button>
+            </div>
           </div>
         </section>
       </main>
     </div>
 
-    <!-- Modal -->
     <div
       class="modal fade"
       id="settings"
@@ -419,13 +380,8 @@
             </button>
           </div>
         </div>
-        <!-- /.modal-content -->
+        </div>
       </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-
-    <!-- Modal -->
     <div
       class="modal fade"
       id="addstream"
@@ -474,12 +430,8 @@
             </button>
           </div>
         </div>
-        <!-- /.modal-content -->
+        </div>
       </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-
     <div
       class="modal fade"
       id="savequeue"
@@ -528,12 +480,8 @@
             </button>
           </div>
         </div>
-        <!-- /.modal-content -->
+        </div>
       </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-
     <div
       class="modal fade bs-example-modal-sm"
       id="wait"
@@ -566,9 +514,6 @@
       </div>
     </div>
 
-    <!-- Bootstrap core JavaScript
-  ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery-3.7.1.min.js"></script>
     <script src="js/js.cookie.min.js"></script>
     <script
@@ -576,7 +521,6 @@
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
-    <!-- Removed bootstrap-notify.js: using built-in Bootstrap alerts via mpd.js notify shim -->
     <script src="js/sammy.js"></script>
     <script src="js/jquery-ui-sortable.min.js"></script>
     <script src="js/mpd.js"></script>

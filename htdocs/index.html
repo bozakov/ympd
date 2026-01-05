@@ -58,7 +58,17 @@
         <div class="volume-slider-container">
           <i id="volume-icon" class="bi bi-volume-up-fill"></i>
           <input type="range" id="volumeslider" min="0" max="100" value="0" />
-          <span id="volume-number" class="volume-value"></span>
+          <span id="volume-number" class="volume-value">0 %</span>
+        </div>
+
+        <div id="search-wrapper" class="search-wrapper">
+          <form id="search" role="search">
+            <i class="bi bi-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search tracks, artists, albums..." />
+            <button type="button" class="search-clear" title="Clear search" style="display:none;">
+              <i class="bi bi-x-circle-fill"></i>
+            </button>
+          </form>
         </div>
 
         <div class="sep"></div>
@@ -220,16 +230,6 @@
             </span>
           </h3>
           <div class="col-md-12" id="filter"></div>
-
-          <div id="search-wrapper" class="search-wrapper">
-            <form id="search" role="search">
-              <i class="bi bi-search search-icon"></i>
-              <input type="text" class="search-input" placeholder="Search tracks, artists, albums..." />
-              <button type="button" class="search-clear" title="Clear search" style="display:none;">
-                <i class="bi bi-x-circle-fill"></i>
-              </button>
-            </form>
-          </div>
 
           <!-- Table -->
           <div class="queue-list-wrapper">

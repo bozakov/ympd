@@ -43,13 +43,18 @@ static int server_callback(struct mg_connection *c, enum mg_event ev) {
 
     switch (ev) {
         case MG_CLOSE:
+            if (c->is_websocket) {
+                fprintf(stdout, "WebSocket closed from %s:%u\n", c->remote_ip, (unsigned)c->remote_port);
+            }
             mpd_close_handler(c);
             return MG_TRUE;
         case MG_WS_HANDSHAKE:
-            // Return MG_FALSE to let mongoose handle the WebSocket upgrade
+            // Log WebSocket handshake request and let mongoose handle the upgrade
+            fprintf(stdout, "WebSocket handshake request from %s:%u\n", c->remote_ip, (unsigned)c->remote_port);
             return MG_FALSE;
         case MG_WS_CONNECT:
             // WebSocket connection established
+            fprintf(stdout, "WebSocket connected from %s:%u\n", c->remote_ip, (unsigned)c->remote_port);
             return MG_TRUE;
         case MG_REQUEST:
             if (c->is_websocket) {
@@ -142,7 +147,7 @@ int main(int argc, char **argv) {
             case 'v':
                 fprintf(stdout,
                         "ympd  %d.%d.%d\n"
-                        "Copyright (C) 2014 Andrew Karpow <andy@ndyk.de>\n"
+                        "Copyright (C) 2014 Andrew Karpow <andy@ndyk.de>\nCopyright (C) 2025 Zdravko Bozakov\n"
                         "built " __DATE__
                         " "__TIME__
                         " ("__VERSION__

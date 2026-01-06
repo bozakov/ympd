@@ -1013,18 +1013,9 @@ body {
   border-radius: 0 12px 12px 0;
 }
 
-/* The Active Indicator Line (Invisible by default) */
+/* The Active Indicator Line (Hidden) */
 .app .queue-list-wrapper .table tbody tr>td:first-child::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 80%;
-  width: 4px;
-  background: transparent;
-  border-radius: 0 999px 999px 0;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: none;
 }
 
 /* Hover State */
@@ -1047,24 +1038,14 @@ body {
   font-weight: 500;
 }
 
-/* Active Indicator Line (Visible) */
+/* Active Indicator Line (Hidden) */
 .app .queue-list-wrapper .table tbody tr.active>td:first-child::before {
-  background: var(--accent-bright);
-  width: 4px;
+  display: none;
 }
 
-/* Active track pulse effect */
+/* Active track pulse effect (Hidden) */
 .app .queue-list-wrapper .table tbody tr.active>td:first-child::after {
-  content: '';
-  position: absolute;
-  left: 2px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 6px;
-  background: var(--accent-bright);
-  border-radius: 50%;
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  display: none;
 }
 
 /* Override Bootstrap's specific active styles */
